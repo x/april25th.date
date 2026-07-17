@@ -1,0 +1,523 @@
+lat,lon,temp,precip,name
+-23.433,144.283,60.8,0.00,Longreach Aero
+-22.015,166.213,76.0,0.00,Noumea La Tontouta
+-21.817,165.867,76.2,0.00,Oua Tom Southwest
+-21.267,164.917,74.8,0.00,Tarbeville Southeast
+-21.133,-175.183,72.3,0.00,Nukualofa
+-20.667,140.5,69.1,0.00,Cloncurry Airport
+-20.546,164.256,75.8,0.00,Koumac
+-20.033,146.267,68.4,0.00,Charters Towers Airport
+-19.634,146.858,69.5,0.00,Woodstock
+-19.249,146.749,72.7,0.00,Townsville Australia/Garbutt
+-17.755,177.443,77.9,0.00,Nadi Intl
+-17.683,168.3,75.1,0.00,Mele East
+-17.05,145.4,69.0,0.00,Mareeba As/Hoevett Field
+-16.886,145.755,76.3,0.00,Cairns Intl
+-15.5,167.25,80.6,0.00,Espiritu Santo
+-15.433,145.183,78.4,0.00,Cooktown Mission
+-13.3,131.133,77.0,0.00,Aidelaide River Se
+-13.049,131.066,76.9,0.00,Batchelor Field Australia
+-12.7,143.3,77.6,0.00,Iron Range Australia
+-10.951,142.459,64.2,0.00,Bamaga Injinoo
+-10.583,142.3,80.0,0.00,Horn Island   (Hid)
+-10.316,150.333,77.4,0.00,Fall River New Guinea/Gurney
+-9.433,147.217,79.8,0.00,Port Moresby W.O.
+-9.428,160.055,80.2,0.00,Honiara Intl
+-8.75,148.25,77.4,0.00,Popondetta
+-8.52,140.418,79.4,0.00,Mopah
+-8.067,148.167,79.8,0.00,Deboin Mission
+-7.97,-14.394,78.8,0.00,Ascension Aux Af
+-4.577,-81.254,76.9,0.00,Capitan Fap Victor Montes Intl
+-3.776,-38.533,81.9,0.00,Pinto Martins Intl
+-2.767,-171.717,81.3,0.00,Canton Island
+-1.379,-48.476,77.2,0.00,Val De Cans Julio Cezar Ribeiro Intl
+-1.033,-80.467,76.7,0.00,Portoviejo/Reales
+-0.454,-90.266,79.2,0.00,Seymour
+1.986,-157.35,79.8,0.00,Christmas Island
+3.85,-159.367,83.0,0.00,Fanning Island
+4.702,-74.147,58.3,0.00,El Dorado Intl
+5.453,-55.188,78.2,0.00,Johan A Pengel Intl
+5.605,-0.167,80.8,0.00,Kotoka Intl
+6.234,-10.362,78.9,0.00,Monrovia Roberts Intl
+7.187,100.608,81.7,0.08,Songkhla
+8.25,-80.567,76.7,0.00,Aguadulce
+8.367,-80.117,75.9,0.00,Rio Hato
+8.391,-82.435,77.8,0.00,Enrique Malek Intl
+8.6,-79.917,78.3,0.00,Chame
+8.85,-79.783,76.1,0.00,La Mitra
+8.917,-79.6,79.7,0.12,Howard
+8.967,-79.55,80.4,0.00,Albrook Afb/Balboa
+9.133,-79.233,83.1,0.00,La Joya
+9.166,-79.545,81.4,0.00,Calzada Larga
+10.595,-61.337,75.7,0.00,Piarco
+10.89,-74.781,79.5,0.00,Ernesto Cortissoz
+12.133,-86.2,80.4,0.00,Mercedes
+12.141,-86.168,80.8,0.00,Managua Intl / Augusto Cesar Sandino Intl
+12.189,-68.96,79.5,0.00,Hato
+12.501,-70.015,80.6,0.00,Reina Beatrix Intl
+12.833,45.033,81.2,0.00,Aden Khormaksar
+12.95,77.633,82.4,0.00,Bangalore/Hindustan Airport
+13.483,22.45,89.0,0.00,Geneina
+13.615,25.325,84.0,0.00,El Fashir
+13.733,-60.953,80.9,0.00,Hewanorra Intl
+13.913,100.607,84.7,0.00,Bangkok Intl / Don Mueang Intl
+13.936,-90.836,85.4,0.00,San Jose
+14.583,-90.527,66.6,0.00,La Aurora
+14.74,-17.49,73.3,0.00,Leopold Sedar Senghor Intl
+15.033,39.05,67.0,0.00,Dekemhare
+15.589,32.553,87.5,0.00,Khartoum
+17.039,54.091,80.1,0.00,Salalah
+17.117,-61.783,79.7,0.00,Coolidge Field   Antigua (Aux.Afb)
+17.386,102.788,84.3,0.01,Udon Thani
+17.7,-64.813,79.8,0.00,Christiansted/Alex.
+17.936,-76.788,75.1,0.00,Norman Manley Intl
+18.017,-66.567,79.9,0.00,Ponce/Mercedita
+18.117,-66.15,72.7,0.00,Cayey
+18.25,-67.15,83.7,0.00,Eugenio Maria De Ho
+18.417,-66.0,80.9,0.00,San Juan Intl Arpt
+18.483,-66.467,81.3,0.00,Los Molinos
+18.5,-67.133,77.6,0.00,Aquadilla/Borinquen
+18.58,-72.293,79.8,0.00,Toussaint Louverture Intl / Port Au Prince Intl
+18.767,98.963,83.5,0.00,Chiang Mai Intl
+19.719,-155.053,73.4,0.00,Hilo General Lyman Arpt
+20.507,-13.043,83.0,0.00,Atar
+21.15,-157.1,77.3,0.00,Molokai (Amos)
+21.324,-157.929,76.9,0.00,Honolulu International Airport
+21.333,-157.95,76.9,0.00,Hickam Afb/Oahu
+21.333,-157.717,76.1,0.00,Waimanalo  Oahu
+21.4,-77.85,75.0,0.00,Camaguey  Camaguey
+21.483,-158.033,71.2,0.00,Kipapa Field Hawaii
+21.487,-158.028,71.9,0.00,Wheeler Army Airfield
+21.583,-158.117,73.0,0.00,Waialua-On-Oahu
+21.683,-158.033,76.4,0.00,Waialee  Oahu   Hawaii
+22.033,-159.783,76.1,0.00,Barking Sands Pacific Missile Range Fac Arpt
+22.45,86.7,84.8,0.00,Chakulia
+22.883,-82.5,72.2,0.00,San Antonio Banos
+24.744,84.951,89.0,0.00,Gaya
+24.907,67.161,88.2,0.00,Jinnah Intl
+24.992,102.744,69.7,0.00,Wujiaba / Changshui
+25.417,100.733,67.9,0.00,Yun-Nan-I
+25.44,81.734,90.3,0.00,Allahabad Arpt
+25.483,-80.383,68.7,0.00,Homestead Afb Airport
+25.5,103.083,72.3,0.00,Yang-Chieh
+26.067,90.167,74.1,0.00,Jorhat
+26.228,-97.654,77.2,0.00,Valley International Arpt
+26.333,89.467,77.1,0.00,Cooch Behar
+26.366,-80.1,67.9,0.00,Boca Raton Florida Aaf
+26.4,-98.35,77.4,0.00,Moore Field
+26.585,-81.861,67.8,0.00,Page Field Airport
+26.685,-80.099,69.8,0.00,Palm Beach International Airport
+27.156,77.961,87.8,0.00,Agra
+27.456,-81.342,66.0,0.00,Sebring Rgnl
+27.484,95.017,68.0,0.00,Dibrugarh
+27.55,-99.467,80.6,0.00,Laredo Intl Airport
+27.567,95.567,69.0,0.00,Doom-Dooma
+27.7,-8.167,72.2,0.00,Tindouf
+27.85,-82.517,67.7,0.00,Mac Dill Afb Airport
+27.962,-82.54,67.0,0.00,Tampa International Airport
+27.983,-82.017,66.4,0.00,Lakeland Linder Rgn
+28.545,-81.333,65.8,0.00,Atoka Muni
+28.585,77.206,90.3,0.00,Safdarjung
+28.867,-100.517,82.0,0.00,Radar Base
+28.9,-89.43,67.9,0.00,Southwest Pass  La
+29.267,-100.283,75.8,0.00,Del Rio(Nexrad)
+29.36,-99.174,76.9,0.00,Hondo Municipal Airport
+29.367,-100.783,80.3,0.00,Laughlin Afb Airport
+29.383,-98.583,76.4,0.00,Lackland Air Force Base (Kelly Field Annex)
+29.533,-98.262,76.3,0.00,Randolph Afb Airport
+29.617,-95.167,71.0,0.00,Ellington Field Airport
+29.883,-97.866,77.2,0.00,San Marcos Tx/Edward Gary Afb
+30.049,-90.029,70.3,0.00,Lakefront Airport
+30.067,-85.583,64.3,0.00,Tyndall Afb Airport
+30.125,-93.228,70.5,0.00,Lake Charles Regional Airport
+30.2,-97.683,76.7,0.00,Bergstrom Afb/Austi
+30.367,-89.45,64.1,0.00,Bay Saint Louis
+30.371,-104.017,79.0,0.00,Marfa Municipal Airport
+30.393,-84.353,64.7,0.00,Tallahassee Regional Airport
+30.417,-88.917,66.5,0.00,Keesler Air Force Base
+30.483,-86.517,63.9,0.00,Eglin Afb Airport
+30.537,-91.147,68.0,0.00,Baton Rouge Metro R
+30.626,-88.068,67.7,0.00,Mobile Downtown Airport
+30.667,-96.55,76.5,0.00,Varisco Airfield
+30.833,-93.366,71.5,0.00,De Ridder Louisiana Aab
+30.833,-85.2,64.1,0.00,Marianna Florida Aaf
+30.967,-83.2,64.4,0.00,Moody Afb/Valdosta
+31.25,-82.4,64.2,0.00,Waycross-Ware Co. Airport
+31.267,-89.25,65.8,0.00,Hattiesburg Muni
+31.317,-85.45,62.8,0.00,Dothan Rgnl
+31.395,-92.291,68.3,0.00,Esler Regional Airport
+31.4,-103.516,85.8,0.00,Pecos Texas Aaf
+31.458,-109.606,72.6,0.00,Bisbee Douglas Intl
+31.517,-103.133,84.2,0.00,Pyote Afb
+31.607,-8.036,68.0,0.00,Menara
+31.619,-97.228,76.8,0.00,Waco Regional Airport
+31.811,-106.376,80.1,0.00,El Paso International Airport
+32.1,6.45,60.9,0.00,Hassi Messaoud Ne
+32.167,-110.883,81.3,0.00,Davis-Monthan Afb Airport
+32.217,-101.517,81.7,0.00,Webb Afb
+32.25,-107.717,72.0,0.00,Deming Muni
+32.321,-90.078,67.1,0.00,Jackson International Airport
+32.334,-104.258,80.4,0.00,Cavern City Air Trml Arpt
+32.335,-88.744,63.9,0.00,Key Field Airport
+32.35,-86.983,65.1,0.00,Craig Fld
+32.35,-85.0,63.8,0.00,Lawson Aaf Airport
+32.367,-64.683,65.2,0.00,Naval Atlantic Meterology & Oceanography Facility
+32.383,-86.35,64.3,0.00,Maxwell Afb Airport
+32.4,-86.25,64.2,0.00,Gunter Annex
+32.45,-112.867,81.7,0.00,Ajo Muni
+32.5,-93.667,71.8,0.00,Barksdale Air Force Base
+32.5,-85.767,62.0,0.00,Tuskegee/Sharpe Fld
+32.511,-111.328,80.9,0.00,Pinal Airpark
+32.516,-92.041,67.1,0.00,Monroe Regional Airport
+32.633,-83.6,63.1,0.00,Robins Afb Airport
+32.667,-114.6,82.5,0.00,Yuma Marine Corps Air Station/Yuma Intl Airport
+32.685,-83.653,62.7,0.00,Middle Georgia Regional Airport
+32.693,-103.213,79.9,0.00,Lea County Regional Airport
+32.733,-96.967,76.8,0.00,Naval Air Station Operations
+32.767,-97.45,76.9,0.00,Fort Worth Naval Air Station Jrb/Carswell Field
+32.85,-106.1,74.7,0.00,Holloman Afb
+32.917,-80.65,63.6,0.00,Walterboro Muni
+33.067,-96.067,69.0,0.00,Majors
+33.3,-111.667,81.8,0.00,Williams Gateway Airport
+33.308,-104.508,75.9,0.00,Roswell International Air Center Ap
+33.367,-7.59,64.9,0.00,Mohammed V
+33.4,-7.533,65.4,0.00,Deroua
+33.466,-82.033,64.1,0.00,Augusta/Daniel Field Ga
+33.483,-90.985,67.6,0.00,Mid Delta Rgnl
+33.496,-90.087,68.2,0.00,Greenwood Leflore
+33.55,-112.367,82.6,0.00,Luke Afb Airport
+33.6,-102.05,74.3,0.00,Reese Afb/Lubbock
+33.619,-114.714,82.2,0.00,Blythe Airport
+33.65,-88.45,64.7,0.00,Columbus Afb Airport
+33.68,-117.866,58.3,0.00,J. Wayne Apt-Orange Co Apt
+33.683,-78.933,62.0,0.00,Myrtle Beach Intl Airport
+33.812,-118.146,58.4,0.00,Long Beach / Daugherty Field / Airport
+33.9,-117.25,57.4,0.00,March Air Reserve Base
+33.942,-81.118,64.7,0.00,Columbia Metropolitan Airport
+33.967,-80.467,64.5,0.00,Shaw Air Force Base
+33.979,-98.493,77.9,0.00,Sheppard Afb/Wichita Falls Muni Ap
+34.067,-117.65,56.5,0.00,Ontario
+34.083,-4.916,62.3,0.00,Fes  Morocco/Fes Ras Elma Fld
+34.095,-117.235,58.3,0.00,San Bernardino International Airport
+34.21,-118.489,57.3,0.00,Van Nuys Airport
+34.233,-3.433,58.8,0.00,Guercif
+34.268,-77.9,63.7,0.00,Wilmington New Hanover County
+34.3,-97.017,74.3,0.00,Ardmore Municipal
+34.3,-6.583,65.8,0.00,Port Lyautey Morocco/Craw Fld
+34.366,-99.0,77.2,0.00,Frederick Oklahoma Aaf
+34.383,-103.317,69.6,0.00,Cannon Afb Airport
+34.427,-100.283,77.3,0.00,Childress Municipal Ap
+34.483,-104.217,68.6,0.00,Fort Sumner Muni
+34.583,-117.383,61.5,0.00,Southern California Logistics Airport
+34.6,-91.583,66.9,0.00,Stuttgart Arkansas Aaf
+34.65,-99.267,76.0,0.00,Altus Afb Airport
+34.65,-87.333,61.8,0.00,Courtland
+34.8,-79.366,63.5,0.00,Maxton Nc/Laurinburg Maxton
+34.846,-82.346,61.5,0.00,Greenville Downtown Arpt
+34.9,-117.867,62.5,0.00,Edwards Air Force Base
+34.983,-89.783,63.1,0.00,Olive Branch
+35.042,-106.616,68.4,0.00,Albuquerque Intl Sunport Airport
+35.117,-119.3,62.8,0.00,Gardner Aaf
+35.135,-118.439,49.1,0.00,Tehachapi Muni
+35.174,-79.009,62.7,0.00,Pope Afb Airport
+35.224,-80.955,62.1,0.00,Charlotte/Douglas International Ap
+35.23,-101.704,67.7,0.00,Amarillo Rick Husband Intl Airport
+35.259,-113.95,70.2,0.00,Kingman
+35.389,-97.601,71.5,0.00,Will Rogers World Airport
+35.393,-86.086,59.9,0.00,Arnold Afb
+35.417,-97.383,74.0,0.00,Tinker Afb Airport
+35.434,-119.054,61.7,0.00,Meadows Field Airport
+35.533,-100.75,67.7,0.00,Pampa Aaf
+35.633,-91.166,66.4,0.00,Newport Arkansas Aaf
+35.683,0.183,65.0,0.00,Er Romri Southwest
+35.75,0.617,67.0,0.00,Relizane
+35.833,8.817,60.4,0.00,Dawwar Awlad Gana Nw
+35.967,-89.95,66.1,0.00,Arkansas International Airport
+36.0,-89.409,64.7,0.00,Dyersburg Municipal Arpt
+36.0,-86.517,60.8,0.00,Smyrna
+36.017,-102.55,62.5,0.00,Dalhart Municipal
+36.117,6.35,60.4,0.00,Telerghma
+36.125,-90.925,65.7,0.00,Walnut Ridge Rgnl
+36.133,6.617,60.4,0.00,El Guerrah
+36.133,7.817,59.0,0.00,Mdaourouch West
+36.2,5.967,58.2,0.00,Mechta Mehboub Se
+36.276,6.62,60.3,0.00,Mohamed Boudiaf Intl
+36.333,-97.917,70.6,0.00,Vance Afb
+36.499,2.816,60.9,0.00,Blida Algeria
+36.664,-121.608,52.8,0.00,Salinas Muni
+36.691,3.215,63.3,0.00,Houari Boumediene
+36.767,3.1,63.7,0.00,Alger-Port
+36.78,-119.719,60.8,0.00,Fresno Yosemite International Airport
+37.083,-76.36,61.5,0.00,Langley Afb Airport
+37.1,-95.583,69.8,0.00,Coffeyville Kansas Aaf
+37.166,-97.033,71.5,0.00,Winfield Ks/Strotner Fld
+37.383,-120.567,57.1,0.00,Castle Afb
+37.512,-77.323,62.9,0.00,Richmond International Airport
+37.721,-122.221,54.8,0.00,Metro Oakland Intl Airport
+37.769,-99.968,64.7,0.00,Dodge City Regional Airport
+37.889,-121.226,55.5,0.00,Stockton Metropolitan Airport
+37.927,-100.725,62.0,0.00,Garden City Regional Arpt
+38.049,-103.513,58.7,0.00,La Junta Municipal Airport
+38.051,-117.09,57.4,0.00,Tonopah Airport
+38.067,-122.5,54.7,0.00,Hamilton Aaf
+38.228,-85.664,62.0,0.00,Bowman Field Airport
+38.25,-78.05,64.4,0.00,Orange Co
+38.289,-104.506,57.3,0.00,Pueblo Memorial Airport
+38.517,-122.817,55.3,0.00,C M Schulz Sonoma Co
+38.55,-89.85,60.8,0.00,Scott Air Force Base/Midamerica Airport
+38.567,-121.3,56.2,0.00,Mather Field
+38.667,-121.4,56.9,0.00,Sacramento Mcclellan Afb
+38.717,-93.55,61.1,0.00,Whiteman Afb Airport
+38.766,-87.6,62.3,0.00,Lawerenceville Il
+38.783,-97.65,64.1,0.20,Salina Muni
+38.81,-104.688,51.2,0.00,City Of Colorado Springs Municipal Ap
+38.817,-104.733,51.2,0.00,Peterson Afb
+38.833,-85.417,61.3,0.00,Madison Aaf
+38.847,-77.035,64.4,0.00,Ronald Reagan Washington Natl Ap
+38.876,-98.809,64.8,0.00,Russell Municipal Airport
+38.933,-85.917,62.5,0.00,Freeman Muni
+38.95,-95.664,63.5,0.51,Forbes Field Airport
+39.05,-96.767,64.4,0.00,Marshall Army Airfield
+39.133,-75.467,60.2,0.00,Dover Afb Airport
+39.367,-94.917,62.3,0.00,Sherman Aaf
+39.467,-76.167,59.8,0.00,Aberdeen Pvng Grnd
+39.484,-119.771,48.0,0.00,Reno/Tahoe International Airport
+39.673,-75.601,58.7,0.00,Wilmington New Cast
+39.725,-86.282,58.5,0.00,Indianapolis International Airport
+39.75,-104.867,54.5,0.00,Denver Wsfo
+39.783,-121.85,57.4,0.00,Chico California Map
+39.817,-82.933,60.7,0.00,Rickenbacker Intl Airport
+39.833,-84.05,61.2,0.00,Wright-Patterson Afb Airport
+39.868,-75.231,58.0,0.00,Philadelphia International Ap
+40.017,-74.6,59.4,0.00,Mcguire Afb Airport
+40.196,-76.772,60.9,0.00,Harrisburg Intl
+40.3,-88.15,56.8,0.00,Rantoul/Chanute Afb
+40.333,-97.417,64.7,0.00,Bruning Aaf
+40.583,-97.567,62.8,0.00,Fairmont Aaf
+40.717,-99.0,58.7,0.00,Kearney Muni
+40.721,-114.036,57.7,0.00,Wendover Airport
+40.733,-73.6,54.6,0.00,Mitchel Field
+40.851,-96.748,61.3,0.00,Lincoln Municipal Airport
+40.971,-85.206,57.5,0.00,Fort Wayne International Airport
+41.117,-111.967,61.1,0.00,Hill Afb Airport
+41.328,-72.049,48.0,0.00,Groton-New London Airport
+41.5,-74.1,58.6,0.00,Stewart International Airport
+41.867,-71.017,50.5,0.00,Taunton Muni
+41.871,-103.593,52.3,0.00,Western Ne Regional/Heilig Field Ap
+41.938,-72.682,55.9,0.00,Bradley International Airport
+42.05,-102.8,52.2,0.00,Alliance Muni
+42.2,-72.533,55.4,0.00,Westover Afb/Metropolitan Airport
+42.231,-83.331,57.9,0.00,Detroit Metro Wayne County Airport
+42.308,-85.251,57.9,0.00,W K Kellogg Airport
+42.391,-96.379,64.1,0.00,Sioux Gateway/Col Bud Day Field Ap
+42.47,-71.289,59.0,0.00,Bedford Hanscom Field
+42.579,-100.0,57.3,0.00,Ainsworth Municipal
+42.608,-82.818,58.3,0.00,Selfridge Air National Guard Base
+42.898,-106.474,52.7,0.00,Natrona County International Ap
+42.92,-112.571,48.5,0.00,Pocatello Regional Airport
+42.933,-71.433,58.5,0.00,Grenier Afb
+42.94,-78.736,50.0,0.00,Buffalo Niagara International Airpor
+43.111,-76.104,57.2,0.31,Syracuse Hancock International Ap
+43.234,-75.407,51.2,0.47,Griffiss Airpark
+43.337,21.854,55.1,0.08,Nis
+43.567,-116.241,51.0,0.00,Boise Air Terminal/Gowen Fd Airport
+43.578,-96.754,57.8,0.00,Joe Foss Field Airport
+44.15,-103.1,52.3,0.00,Ellsworth Air Force Base
+44.256,-121.139,43.2,0.00,Roberts Fld
+44.398,-98.223,52.7,0.00,Huron Municipal Arpt
+44.483,-123.283,50.3,0.00,Corvallis Muni
+44.567,-112.317,38.8,0.00,Monida
+44.798,-68.819,48.7,0.00,Bangor Airport
+45.596,-122.609,51.9,0.00,Portland International Airport
+45.648,-68.693,58.3,0.00,Millinocket Municipal Arpt
+45.698,-118.855,49.2,0.00,Eastern Or Regional At Pendleton Ap
+45.817,16.033,58.7,0.24,Zagreb/Maksimir
+46.095,-118.287,49.7,0.00,Walla Walla Regional Arpt
+46.112,-64.679,49.3,0.00,Greater Moncton Romeo Leblanc Intl
+46.117,-67.8,48.6,0.00,Houlton Intl
+46.167,-60.05,48.2,0.00,Sydney A
+46.683,-68.05,45.3,0.00,Nern Maine Rgnl Arpt At Presque Is Airport
+47.049,-109.458,43.2,0.00,Lewistown Municipal Arpt
+47.15,-122.483,47.2,0.00,Mcchord Afb Airport
+47.308,-119.515,51.5,0.00,Ephrata Municipal
+47.517,-111.183,45.3,0.00,Malmstrom Afhp Heliport
+47.533,14.133,52.6,0.00,Aigen/Ennstal (Mil)
+47.619,-52.752,43.8,0.00,St Johns Intl
+47.622,-117.528,46.6,0.00,Spokane International Airport
+47.671,9.511,50.8,0.00,Friedrichshafen
+47.9,-122.283,45.6,0.00,Snohomish Co
+47.967,16.267,58.7,0.31,Voeslau-Flugfeld
+47.989,10.24,50.7,0.00,Allgau / Memmingen
+48.0,7.85,55.5,0.00,Freiburg (Civ/Fafb)
+48.067,11.633,53.1,0.00,Neubiberg (Ger-Afb)
+48.071,10.906,58.2,0.00,Landsberg Lech
+48.133,11.55,56.5,0.00,Munich
+48.17,17.213,56.6,0.08,M R Stefanik
+48.186,10.861,52.1,0.00,Lechfeld
+48.206,11.267,53.0,0.00,Furstenfeldbruck
+48.214,-106.621,47.6,0.00,Wokal Field/Glasgow Intl Airport
+48.244,11.553,51.9,0.00,Muenchen-Oberschlei
+48.354,11.786,53.6,0.00,Munchen
+48.425,10.932,53.2,0.00,Augsburg
+48.433,10.233,56.4,0.00,Leipheim(Gafb)
+48.533,-58.55,38.1,0.00,Stephenville Dymond
+48.538,7.628,54.7,0.02,Strasbourg Entzheim
+48.55,7.783,60.4,0.01,Strasbourg-Neuhof
+48.603,-112.375,41.7,0.00,Cut Bank Muni
+48.69,9.222,55.5,0.00,Stuttgart
+48.716,11.534,54.6,0.02,Ingolstadt Manching
+48.717,9.7,54.3,0.02,Goppingen (Usa-Af)
+48.767,9.183,53.7,0.04,Stuttgart
+48.937,-54.568,45.0,0.00,Gander Intl
+48.95,14.433,51.5,0.20,Ceske Budejovice
+49.033,8.367,56.0,0.02,Karlsruhe (Usa-Af)
+49.05,12.1,50.6,0.00,Regensburg/Oberhub
+49.072,6.132,51.9,0.00,Frescaty
+49.118,9.784,52.5,0.02,Schwabisch Hall
+49.151,16.694,51.8,0.16,Turany
+49.218,11.1,64.6,0.04,Roth
+49.308,10.639,50.7,0.00,Ansbach Ahp / Katterbach Germany
+49.474,10.388,56.8,0.02,Illesheim Ahp
+49.499,11.078,55.0,0.00,Nurnberg
+49.517,-114.0,44.3,0.04,Pincher Creek
+49.564,8.463,61.5,0.00,Coleman Aaf / Coleman Barracks Germany
+49.583,10.917,56.0,0.00,Herzo Base (Usa-Hp)
+49.617,15.583,49.3,0.02,Havlickuv Brod
+49.648,9.966,53.2,0.02,Giebelstadt Aaf
+49.675,13.275,47.3,0.00,Plzen Line
+49.75,6.667,52.4,0.00,Trier/Petrisberg
+49.75,9.5,54.8,0.02,Wertheim (Usa-Hp)
+49.767,9.967,54.0,0.00,Wurzburg (Usa-Af)
+49.967,8.15,51.9,0.01,Finthen (Usa-Af)
+49.984,11.639,49.0,0.00,Bayreuth
+50.026,8.543,51.1,0.02,Frankfurt Main
+50.05,8.325,50.0,0.00,Wiesbaden Aaf
+50.067,12.383,47.4,0.02,Cheb
+50.101,14.26,50.1,0.00,Ruzyne
+50.117,14.533,52.8,0.00,Praha-Kbely
+50.203,12.915,45.7,0.02,Karlovy Vary
+50.25,15.85,53.8,0.08,Hradec Kralove
+50.283,-64.15,38.1,0.00,Mingan
+50.417,7.583,54.4,0.00,Bendorf
+50.483,12.133,47.8,0.00,Plauen (Aut)
+50.583,8.7,49.4,0.02,Giessen
+50.7,7.15,54.9,0.01,Bonn/Friesdorf(Aut)
+50.767,15.017,51.8,0.00,Liberec
+50.783,6.1,51.2,0.01,Aachen
+50.866,7.143,51.3,0.06,Koln Bonn
+50.98,10.958,52.2,0.02,Erfurt Weimar
+50.983,11.317,53.8,0.08,Weimar
+51.133,13.767,51.8,0.00,Dresden
+51.289,6.767,53.8,0.02,Dusseldorf
+51.3,13.1,54.0,0.03,Oschatz
+51.333,10.167,50.5,0.02,Kalteneber
+51.383,179.267,38.6,0.00,Amchitka Island
+51.417,21.117,53.6,0.04,Radom
+51.424,12.236,51.6,0.02,Leipzig Halle
+51.439,-2.286,55.8,0.00,Colerne
+51.55,-178.8,40.3,0.00,Kavalga Island
+51.55,9.95,52.6,0.06,Goettingen
+51.55,12.067,55.0,0.04,Oppin
+51.561,15.585,53.8,0.00,Szprotawa-Wiechlice
+51.65,13.583,53.3,0.04,Doberlug/Kirchhain
+51.65,178.667,39.0,0.00,Amchitka Island N
+51.667,14.633,53.2,0.02,Preschen
+51.733,19.4,52.7,0.16,Lodz
+51.883,-176.65,37.5,0.00,Adak Nas
+51.95,8.9,50.1,0.06,Detmold (Uk-Army)
+52.117,11.583,51.4,0.04,Magdeburg
+52.25,0.767,54.5,0.00,Raf Bury St Edmunds
+52.319,10.556,50.0,0.06,Braunschweig Wolfsburg
+52.367,-0.217,55.3,0.00,Alconbury Raf     &
+52.383,-172.417,37.0,0.00,Finch Point
+52.421,16.826,54.0,0.00,Lawica
+52.461,9.685,51.1,0.04,Hannover
+52.56,13.288,53.6,0.14,Tegel
+52.769,-108.244,40.2,0.00,North Battleford
+52.817,-102.317,40.8,0.00,Hudson Bay  Sask
+52.833,11.15,50.4,0.02,Salzwedel
+52.833,14.417,51.7,0.00,Moryn
+52.95,-168.85,33.8,0.00,Nikolski
+53.05,18.583,54.6,0.08,Torun
+53.133,9.35,51.8,0.08,Rotenburg
+53.367,-167.9,32.3,0.00,Umnak (Fort Glen)
+53.525,18.849,53.4,0.17,Grudziadz / Lisie Katy Arpt
+53.55,13.2,49.8,0.04,Neubrandenburg
+53.63,9.988,49.1,0.14,Hamburg
+53.75,14.067,52.0,0.12,Ueckermuende (Aut)
+53.8,-0.75,53.9,0.00,Raf Home-On-Spalding
+53.967,-101.1,40.7,0.00,The Pas Airport
+54.183,12.083,49.3,0.04,Warnemuende
+54.2,11.1,50.7,0.05,Dahmeshoved
+54.223,19.543,52.6,0.26,Elblag-Milejewo
+54.378,18.466,52.1,0.14,Lecha Walesy
+54.459,9.516,48.0,0.02,Schleswig
+54.483,17.1,50.3,0.16,Slupsk/Redzikowo
+54.5,11.233,47.3,0.00,Marienleuchte
+54.617,19.883,48.9,0.16,Baltiysk Naval
+54.667,-101.683,36.6,0.00,Flin Flon
+54.683,20.65,51.3,0.04,Gutenfeld
+54.7,7.167,52.2,0.01,Forschungs Platform
+54.783,20.617,51.0,0.06,Guryevsk
+54.916,-98.633,39.2,0.00,Wabowden Manitoba Dot
+54.933,19.95,46.8,0.08,Donskoye
+54.95,20.25,51.0,0.02,Pionerskij
+55.039,-131.579,42.5,0.00,Annette Island Airport
+55.083,21.867,50.6,0.02,Sovetsk
+55.221,-162.732,29.2,0.00,Cold Bay Airport
+55.533,-102.35,38.8,0.00,Island Falls Saskatchewan Dot
+55.733,21.083,46.9,0.10,Klaipeda
+55.767,12.343,49.5,0.02,Vaerlose
+56.238,-120.74,38.5,0.00,Fort St John
+56.35,-94.717,30.5,0.00,Gillam Airport
+56.65,-111.217,43.0,0.00,Fort Mcmurray Awos Arpt
+56.95,-158.617,30.3,0.00,Port Heiden
+57.093,9.849,50.2,0.00,Flyvestation Aalborg
+58.1,-68.417,24.1,0.00,Kuujjuaq A
+58.199,-111.383,45.6,0.00,Embarras Alberta Dot Apt
+58.467,-78.079,22.2,0.08,Inukjuak Ua
+58.683,-156.656,32.9,0.00,King Salmon Airport
+58.733,-94.05,20.0,0.00,Churchill A Ua  Man
+58.833,-122.6,43.3,0.00,Fort Nelson Ua
+59.0,-161.817,30.9,0.00,Platinum
+59.367,-97.383,16.8,0.00,Caribou East
+59.512,-139.671,36.0,0.00,Yakutat Airport
+60.02,-111.962,37.0,0.00,Fort Smith Ua - Nt
+60.033,-43.117,27.0,0.00,Prins Christian
+60.116,-128.823,34.6,0.00,Watson Lake
+60.35,-172.7,27.0,0.00,St. Matthew Island
+60.489,-145.451,39.5,0.00,M.K.(Mudhole) Smith Arpt
+60.633,-132.05,30.2,0.00,Fish Lake
+60.683,-46.533,27.3,0.00,Simiutaq
+60.71,-135.067,34.2,0.00,Whitehorse Intl / Erik Nielsen Intl
+60.833,-115.783,37.1,0.00,Hay River Merlyn Carter
+61.1,-94.067,11.5,0.00,Arviat
+61.161,-45.426,25.2,0.00,Narsarsuaq
+61.183,-113.683,35.8,0.00,Fort Resolution
+61.233,-48.1,28.5,0.00,Groennedal
+61.25,-149.8,38.9,0.00,Anchorage/Elmendorf
+61.283,-129.4,32.7,0.00,Frances Lake
+61.317,-117.6,40.9,0.00,Fort Providence
+61.76,-121.237,38.0,0.02,Fort Simpson
+62.463,-114.44,32.5,0.00,Yellowknife
+63.183,-41.333,28.8,0.00,Valkyrierne
+63.333,-90.717,9.2,0.00,Chesterfield Inlet&
+63.433,-51.183,23.4,0.00,Marrak Point
+63.756,-68.556,15.2,0.00,Iqaluit
+63.967,-22.6,38.5,0.00,Keflavik Naval Air Station
+64.043,-139.128,35.5,0.16,Dawson City
+64.13,-21.941,38.6,0.00,Reykjavik
+64.193,-83.359,10.8,0.00,Coral Harbour
+64.511,-165.44,28.7,0.00,Nome Airport
+64.733,-156.933,30.1,0.00,Galena A.
+64.833,-147.617,40.4,0.00,Wainwright Aaf
+64.917,-125.567,33.5,0.00,Fort Norman Airport
+65.283,-126.8,37.1,0.00,Norman Wells Arpt
+65.6,-37.633,32.7,0.00,Tasiilaq
+65.933,-36.683,32.0,0.00,Ikateq
+66.033,-53.567,27.3,0.00,Ungusivik
+67.017,-50.689,26.6,0.00,Sondre Stromfjord / Kangerlussuaq
+67.1,-62.35,8.7,0.00,Padloping Island
+68.7,-52.85,26.1,0.00,Aasiaat (Egedesminde)
+70.483,-21.95,28.0,0.00,Scoresbysund
+73.033,-85.15,4.2,0.00,Arctic Bay        &

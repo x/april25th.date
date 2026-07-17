@@ -1,0 +1,145 @@
+lat,lon,temp,precip,name
+32.383,-86.35,63.8,0.00,Maxwell Afb Airport
+33.9,-117.25,59.3,0.00,March Air Reserve Base
+35.283,62.35,59.5,0.00,Gyshgy
+37.833,65.2,62.0,0.00,Kerki Intl
+37.987,58.361,68.5,0.00,Ashgabat
+38.543,68.825,54.2,0.00,Dushanbe
+38.733,48.833,59.8,0.00,Lankaran
+38.983,56.283,69.3,0.00,Gyzylarbat
+40.033,52.983,72.5,0.00,Turkmenbashi
+40.212,44.53,62.2,0.00,Yerevan-Arabkir
+40.217,69.733,55.8,0.00,Khudjant
+40.35,49.833,56.0,0.00,Baku (Observatory)
+41.258,69.281,52.7,0.00,Yuzhny / Tashkent Islam Karimov Intl
+41.667,44.95,63.5,0.00,Tbilisi
+42.35,44.7,44.7,0.00,Pasanauri
+43.0,47.5,51.8,0.00,Mahachkala
+43.033,44.683,53.7,0.00,Vladikavkaz
+43.233,76.933,46.5,0.00,Almaty
+43.567,-116.241,52.8,0.00,Boise Air Terminal/Gowen Fd Airport
+43.86,51.092,66.7,0.00,Aktau
+44.05,43.033,53.5,0.00,Pjatigorsk
+44.767,65.533,51.0,0.00,Kyzylorda
+44.983,41.117,60.8,0.00,Armavir
+45.033,39.15,59.3,0.00,Krasnodar
+45.807,-108.542,43.9,0.00,Billings Logan International Airport
+45.917,43.35,61.2,0.00,Divnoe
+47.117,51.917,56.3,0.00,Atyrau
+47.417,10.983,14.0,0.12,Zugspitze Mountain
+47.633,43.15,59.5,0.00,Kotel'Nikovo
+47.671,9.511,48.0,0.04,Friedrichshafen
+47.833,10.867,42.0,0.12,Altenstadt
+47.883,8.0,32.2,0.04,Feldberg/Schwarzwal
+48.133,11.55,44.2,0.00,Munich
+48.186,10.861,42.3,0.02,Lechfeld
+48.244,11.553,42.3,0.00,Muenchen-Oberschlei
+48.528,135.188,34.7,0.00,Khabarovsk Novy
+48.817,58.217,48.7,0.00,Emba
+49.033,8.367,52.0,0.00,Karlsruhe (Usa-Af)
+49.05,12.1,48.2,0.01,Regensburg/Oberhub
+49.383,75.517,29.5,0.00,Karkaralinsk
+49.435,-2.602,53.2,0.00,Guernsey
+49.499,11.078,46.4,0.04,Nurnberg
+49.564,8.463,51.0,0.00,Coleman Aaf / Coleman Barracks Germany
+49.635,63.482,41.5,0.00,Torgai
+49.75,6.667,47.8,0.00,Trier/Petrisberg
+49.933,-6.3,50.5,0.12,Scilly/St.Marys
+49.95,-5.183,50.5,0.00,Lizard
+50.026,8.543,49.6,0.05,Frankfurt Main
+50.217,8.45,40.2,0.04,Kleiner Feldberg
+50.246,57.207,47.0,0.00,Aktyubinsk / Aktobe
+50.289,11.855,43.2,0.24,Hof Plauen
+50.333,6.95,42.0,0.02,Nuerburg
+50.417,80.3,37.0,0.00,Semipalatinsk
+50.433,12.95,31.3,0.38,Fichtelberg Mtn
+50.5,9.95,36.0,0.24,Wasserkuppe (Mount)
+50.7,15.733,22.8,0.06,Pec Pod Snezkou
+50.783,6.1,47.6,0.05,Aachen
+50.8,12.867,46.5,0.02,Chemnitz
+50.866,7.143,48.1,0.01,Koln Bonn
+50.98,10.958,47.0,0.12,Erfurt Weimar
+51.022,71.467,34.2,0.00,Astana Intl
+51.083,1.017,50.5,0.00,Lympne
+51.117,16.883,39.4,0.46,Wroclaw I
+51.133,13.767,46.0,0.10,Dresden
+51.151,51.543,56.3,0.00,Uralsk
+51.167,14.95,42.0,0.31,Goerlitz
+51.35,-0.117,55.4,0.02,Purley Oaks
+51.35,1.333,53.7,0.00,Manston
+51.4,6.967,47.4,0.02,Essen/Mulheim
+51.424,12.236,46.3,0.10,Leipzig Halle
+51.518,7.612,49.1,0.55,Dortmund
+51.683,-5.167,48.7,0.00,St. Annes Head
+51.796,55.457,51.0,0.00,Orenburg
+51.933,-10.25,52.8,0.00,Valentia Observatory
+51.933,15.533,36.7,0.67,Zielona Gora
+52.117,11.583,46.0,0.02,Magdeburg
+52.195,77.074,36.3,0.00,Pavlodar
+52.217,14.117,37.2,0.16,Lindenberg
+52.267,18.667,43.2,0.02,Kolo
+52.268,104.389,29.8,0.00,Irkutsk
+52.461,9.685,46.8,0.04,Hannover
+52.473,13.404,42.9,0.39,Tempelhof
+52.583,1.717,54.2,0.00,Gorleston
+52.667,84.917,34.0,0.00,Bijsk Zonal'Naya
+52.85,15.667,36.2,0.51,Stare Kurowo
+53.217,63.617,41.5,0.00,Kostanay
+53.317,-4.617,48.7,0.00,Holyhead
+53.35,59.083,37.0,0.00,Magnitogorsk
+53.4,14.617,37.2,0.71,Szczecin
+53.617,0.15,55.3,0.00,Spurn Head (Point)
+53.617,109.633,30.0,0.00,Barguzin
+53.63,9.988,45.6,0.04,Hamburg
+53.75,91.4,32.5,0.00,Abakan
+53.767,87.233,33.0,0.00,Baydayevka
+53.91,-8.818,51.1,0.04,Connaught / Ireland West
+53.917,14.233,39.4,0.16,Swinoujscie
+54.033,22.517,34.8,0.04,Olecko
+54.15,15.3,39.6,0.04,Mrzezyno
+54.183,15.583,39.2,0.12,Kolobrzeg
+54.2,11.1,46.0,0.12,Dahmeshoved
+54.378,18.466,40.3,0.00,Lecha Walesy
+54.383,10.15,48.0,0.00,Kiel/Holtenau(Gnvy)
+54.417,-4.367,53.3,0.00,Point Of Ayre (Lh)
+54.558,55.874,54.3,0.00,Ufa
+54.683,13.433,39.7,0.14,Arkona (Cape)
+54.833,69.15,38.5,0.00,Petropavlovsk
+54.883,99.033,32.0,0.00,Nizne-Udinsk
+54.89,20.593,41.4,0.00,Khrabrovo
+54.967,73.311,38.3,0.00,Omsk Tsentralny
+55.013,82.651,34.0,0.00,Tolmachevo
+55.017,-1.417,55.8,0.00,Tynemouth
+55.2,165.983,36.2,0.00,Ostrov Beringa
+55.306,61.503,48.5,0.00,Balandino
+55.333,78.308,33.8,0.00,Barabinsk
+55.367,-7.333,51.2,0.00,Malin Head
+55.467,65.4,44.2,0.00,Kurgan
+55.983,159.983,39.2,0.00,Kozyrevsk
+56.0,92.883,34.2,0.00,Krasnojarsk
+56.033,-3.133,50.8,0.00,Inchkeith
+56.371,101.698,32.5,0.00,Bratsk
+56.5,84.917,31.8,0.00,Tomsk
+56.743,60.803,52.7,0.00,Koltsovo
+57.117,65.433,47.5,0.00,Tyumen'
+57.202,-2.198,55.3,0.02,Aberdeen Dyce
+57.915,56.021,55.8,0.00,Bolshoe Savino
+58.216,-6.331,47.5,0.28,Stornoway
+58.317,82.95,28.3,0.00,Kolpasevo
+58.45,92.15,29.5,0.00,Jenisejsk
+58.459,-3.093,49.5,0.00,Wick
+59.6,60.533,54.5,0.00,Serov
+59.8,30.263,53.7,0.00,Pulkovo
+60.133,-1.183,46.3,0.16,Lerwick
+60.4,56.517,50.5,0.00,Cherdyn'
+61.028,69.086,44.0,0.00,Khanty Mansiysk
+61.344,73.402,36.0,0.00,Surgut
+66.15,-169.833,28.8,0.02,Mys Uelen
+66.533,66.667,28.8,0.00,Salehard
+68.9,-179.633,11.0,0.00,Mys Shmidta
+69.65,84.4,20.3,0.00,Ust Port /Ust Eniseisk
+69.717,66.8,21.7,0.00,Maresale
+70.633,162.483,-1.0,0.00,Ostrov Chetyrehstolbovoy
+70.983,-178.65,8.5,0.00,Ostrov Vrangelya
+73.5,80.4,18.7,0.00,Ostrov Dikson
+77.717,104.3,7.7,0.00,Gmo Im.E.K. Fedorova

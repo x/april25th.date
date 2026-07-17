@@ -1,0 +1,198 @@
+lat,lon,temp,precip,name
+-41.545,147.214,49.9,0.00,Launceston
+-37.733,144.9,58.7,0.00,Essendon Airport
+-35.307,149.195,56.2,0.00,Canberra
+-34.793,138.633,58.5,0.00,Adelaide Parafield
+-33.95,151.2,65.0,0.00,Sydney Intl Airport
+-32.133,133.7,60.2,0.00,Ceduna Amo
+-27.57,153.0,67.5,0.00,Archer Field Airport
+-23.382,150.475,73.3,0.00,Rockhampton
+-20.667,140.5,77.4,0.00,Cloncurry Airport
+-16.27,133.38,79.9,0.00,Dalywatersamo
+-15.47,145.25,79.0,0.00,Cooktownamo
+8.967,-79.55,84.2,0.00,Albrook Afb/Balboa
+18.5,-67.133,83.3,0.00,Aquadilla/Borinquen
+18.917,-155.683,79.0,0.00,South Point Beach
+21.15,-157.1,79.2,0.00,Molokai (Amos)
+21.324,-157.929,78.0,0.00,Honolulu International Airport
+21.333,-157.95,78.0,0.00,Hickam Afb/Oahu
+21.487,-158.028,74.1,0.00,Wheeler Army Airfield
+21.867,-159.45,78.0,0.00,Koloa (Cgs)
+29.383,-98.583,62.8,0.00,Lackland Air Force Base (Kelly Field Annex)
+29.533,-98.262,61.3,0.00,Randolph Afb Airport
+30.371,-104.017,68.0,0.00,Marfa Municipal Airport
+30.483,-86.517,69.7,0.00,Eglin Afb Airport
+32.35,-85.0,62.4,0.00,Lawson Aaf Airport
+32.383,-86.35,63.9,0.08,Maxwell Afb Airport
+32.5,-93.667,62.5,0.00,Barksdale Air Force Base
+33.9,-117.25,56.1,0.00,March Air Reserve Base
+34.65,-98.4,62.6,0.00,Henry Post Aaf Airport
+35.174,-79.009,51.0,0.00,Pope Afb Airport
+35.65,-95.367,60.9,0.00,Muskogee/Davis Fld
+37.083,-76.36,50.5,0.00,Langley Afb Airport
+38.067,-122.5,53.3,0.00,Hamilton Aaf
+38.55,-89.85,55.3,0.00,Scott Air Force Base/Midamerica Airport
+38.667,-121.4,56.1,0.00,Sacramento Mcclellan Afb
+38.847,-77.035,47.3,0.00,Ronald Reagan Washington Natl Ap
+39.05,-96.767,59.0,0.00,Marshall Army Airfield
+39.367,-94.917,53.2,0.00,Sherman Aaf
+39.467,-76.167,46.7,0.00,Aberdeen Pvng Grnd
+39.833,-84.05,49.1,0.00,Wright-Patterson Afb Airport
+40.196,-76.772,43.9,0.00,Harrisburg Intl
+40.3,-88.15,52.0,0.00,Rantoul/Chanute Afb
+40.733,-73.6,45.0,0.00,Mitchel Field
+42.608,-82.818,42.1,0.00,Selfridge Air National Guard Base
+42.898,-106.474,46.6,0.00,Natrona County International Ap
+44.15,-103.1,39.2,0.00,Ellsworth Air Force Base
+44.398,-98.223,41.2,0.00,Huron Municipal Arpt
+45.596,-122.609,52.3,0.00,Portland International Airport
+45.698,-118.855,53.4,0.00,Pendleton Municipal Arpt
+45.807,-108.542,40.2,0.00,Billings Logan International Airport
+47.083,-122.583,50.9,0.00,Gray Aaf
+47.417,10.983,24.9,0.06,Zugspitze Mountain
+47.533,14.133,55.8,0.00,Aigen/Ennstal (Mil)
+47.633,-117.65,49.8,0.00,Fairchild Air Force Base
+47.671,9.511,57.6,0.00,Friedrichshafen
+47.8,11.017,49.2,0.04,Hohenpeissenberg
+47.883,8.0,35.5,0.30,Feldberg/Schwarzwal
+47.989,10.24,51.4,0.02,Allgau / Memmingen
+48.0,7.85,55.3,0.01,Freiburg (Civ/Fafb)
+48.067,11.633,54.3,0.02,Neubiberg (Ger-Afb)
+48.071,10.906,53.5,0.04,Landsberg Lech
+48.17,17.213,65.7,0.00,M R Stefanik
+48.186,10.861,54.0,0.00,Lechfeld
+48.206,11.267,56.0,0.02,Furstenfeldbruck
+48.233,14.183,59.7,0.00,Horsching (Aus-Afb)
+48.244,11.553,56.0,0.02,Muenchen-Oberschlei
+48.354,11.786,55.6,0.02,Munchen
+48.433,10.233,56.3,0.00,Leipheim(Gafb)
+48.711,11.212,55.7,0.02,Neuburg
+48.716,11.534,56.8,0.02,Ingolstadt Manching
+48.717,9.7,53.7,0.00,Goppingen (Usa-Af)
+48.767,9.183,52.0,0.02,Stuttgart
+49.033,8.367,53.6,0.05,Karlsruhe (Usa-Af)
+49.05,12.1,58.6,0.02,Regensburg/Oberhub
+49.118,9.784,52.4,0.00,Schwabisch Hall
+49.151,16.694,63.5,0.00,Turany
+49.218,11.1,57.8,0.01,Roth
+49.308,10.639,52.3,0.02,Ansbach Ahp / Katterbach Germany
+49.499,11.078,56.0,0.00,Nurnberg
+49.564,8.463,53.1,0.00,Coleman Aaf / Coleman Barracks Germany
+49.617,15.583,57.6,0.00,Havlickuv Brod
+49.648,9.966,52.6,0.00,Giebelstadt Aaf
+49.675,13.275,57.9,0.02,Plzen Line
+49.75,6.667,49.9,0.18,Trier/Petrisberg
+49.75,9.5,52.7,0.00,Wertheim (Usa-Hp)
+49.75,10.2,55.5,0.00,Kitzingen
+49.767,9.967,52.4,0.00,Wurzburg (Usa-Af)
+49.984,11.639,53.9,0.02,Bayreuth
+50.026,8.543,52.4,0.00,Frankfurt Main
+50.05,8.325,53.8,0.00,Wiesbaden Aaf
+50.067,12.383,54.6,0.05,Cheb
+50.117,14.533,63.3,0.00,Praha-Kbely
+50.169,8.962,53.4,0.08,Hanau Aaf
+50.203,12.915,56.6,0.02,Karlovy Vary
+50.217,8.45,42.2,0.04,Kleiner Feldberg
+50.25,15.85,61.6,0.00,Hradec Kralove
+50.289,11.855,53.5,0.01,Hof Plauen
+50.333,6.95,45.8,0.39,Nuerburg
+50.433,12.95,47.1,0.00,Fichtelberg Mtn
+50.483,12.133,54.6,0.05,Plauen (Aut)
+50.583,8.7,53.5,0.04,Giessen
+50.7,15.733,48.4,0.00,Pec Pod Snezkou
+50.7,23.25,69.3,0.00,Zamosc
+50.767,15.017,60.8,0.00,Liberec
+50.783,6.1,51.0,0.16,Aachen
+50.8,12.867,60.0,0.00,Chemnitz
+50.817,19.1,68.8,0.00,Czestochowa
+50.85,10.467,45.0,0.02,Grosser Inselsberg
+50.866,7.143,53.9,0.10,Koln Bonn
+50.98,10.958,56.9,0.05,Erfurt Weimar
+50.983,11.317,59.0,0.00,Weimar
+51.103,16.886,67.4,0.00,Strachowice
+51.115,9.286,54.7,0.01,Fritzlar
+51.117,16.883,64.6,0.00,Wroclaw I
+51.133,13.767,61.7,0.02,Dresden
+51.167,14.95,61.2,0.05,Goerlitz
+51.183,8.483,45.5,0.01,Kahler Asten(Mount)
+51.2,16.2,61.2,0.00,Legnica
+51.233,6.5,54.9,0.42,Moenchengladbach
+51.233,7.6,51.8,0.04,Ludenscheid       &
+51.289,6.767,53.7,0.16,Dusseldorf
+51.3,13.1,61.7,0.00,Oschatz
+51.317,12.45,63.0,0.02,Leipzig-Holzhausen
+51.4,6.967,53.6,0.12,Essen/Mulheim
+51.4,10.317,57.9,0.03,Leinefelde (Aut)
+51.517,11.95,62.2,0.00,Halle-Kroellwitz
+51.518,7.612,56.0,0.05,Dortmund
+51.55,12.067,60.8,0.02,Oppin
+51.614,8.616,56.7,0.02,Paderborn Lippstadt
+51.633,15.383,61.4,0.00,Stara Kopernia
+51.65,15.15,60.6,0.02,Zary Misato
+51.733,19.4,66.8,0.00,Lodz
+51.783,8.833,58.6,0.02,Bad Lippspringe
+51.8,10.617,44.7,0.01,Brocken (Peak)
+51.923,8.306,59.3,0.02,Gutersloh
+51.933,15.533,61.2,0.02,Zielona Gora
+51.95,8.9,56.9,0.18,Detmold (Uk-Army)
+51.967,7.6,56.9,0.05,Munster/Telgte
+51.967,9.8,54.0,0.03,Alfelf
+52.117,11.583,59.4,0.02,Magdeburg
+52.183,9.95,58.3,0.06,Hildesheim
+52.217,14.117,61.0,0.02,Lindenberg
+52.25,8.05,57.6,0.01,Osnabruck/Atterheid
+52.318,8.17,58.2,0.02,Belm
+52.319,10.556,57.7,0.00,Braunschweig Wolfsburg
+52.367,14.517,61.8,0.00,Frankfurt /Oder
+52.421,16.826,64.1,0.00,Lawica
+52.45,7.167,57.4,0.00,Nordhorn Range
+52.457,9.427,58.7,0.06,Wunstorf
+52.461,9.685,58.8,0.09,Hannover
+52.473,13.404,61.0,0.02,Tempelhof
+52.56,13.288,60.6,0.04,Tegel
+52.591,10.022,58.7,0.18,Celle
+52.833,11.15,56.5,0.02,Salzwedel
+52.919,10.198,57.2,0.02,Fassberg
+53.05,18.583,69.3,0.00,Torun
+53.317,13.933,61.6,0.00,Gruenow (Aut)
+53.317,15.0,63.3,0.00,Stargard Szczecinski
+53.4,14.617,62.1,0.00,Szczecin
+53.45,16.5,61.5,0.00,Nadarzyce
+53.525,18.849,69.0,0.02,Grudziadz / Lisie Katy Arpt
+53.533,8.167,53.6,0.02,Wilhelmshaven
+53.534,7.889,54.5,0.12,Jever
+53.55,13.2,57.2,0.00,Neubrandenburg
+53.567,21.0,58.2,0.00,Szczytno
+53.63,9.988,52.7,0.00,Hamburg
+53.75,14.067,54.5,0.00,Ueckermuende (Aut)
+53.867,8.7,51.2,0.00,Cuxhaven
+53.883,14.15,51.8,0.00,Heringsdorf
+53.9,15.45,62.5,0.00,Pniewo
+53.917,14.233,44.5,0.00,Swinoujscie
+54.017,14.767,46.6,0.00,Dzwirzyno
+54.033,22.517,55.0,0.00,Olecko
+54.133,20.567,57.6,0.00,Lidzbark Warminski
+54.15,15.3,56.0,0.00,Mrzezyno
+54.15,15.35,43.8,0.00,Beacon 186
+54.183,7.883,47.0,0.00,Helgoland Island
+54.183,12.083,48.0,0.00,Warnemuende
+54.183,15.583,45.7,0.00,Kolobrzeg
+54.2,11.1,44.1,0.02,Dahmeshoved
+54.223,19.543,66.4,0.00,Elblag-Milejewo
+54.283,16.117,48.6,0.00,Bogus Polish
+54.367,13.083,47.4,0.00,Parow
+54.378,18.466,47.8,0.04,Lecha Walesy
+54.383,10.15,46.6,0.02,Kiel/Holtenau(Gnvy)
+54.5,11.233,42.1,0.00,Marienleuchte
+54.567,20.6,57.6,0.00,Nivenskoye
+54.617,19.883,50.0,0.00,Baltiysk Naval
+54.683,20.65,60.8,0.00,Gutenfeld
+54.7,7.167,52.0,0.04,Forschungs Platform
+54.783,20.617,55.5,0.00,Guryevsk
+54.89,20.593,52.0,0.00,Khrabrovo
+54.95,20.25,46.6,0.00,Pionerskij
+55.017,8.417,52.3,0.00,List/Sylt
+55.733,21.083,49.7,0.00,Klaipeda
+58.467,-78.079,22.0,0.00,Inukjuak Ua
+60.117,10.833,48.5,0.00,Hakadal
+63.458,10.94,38.6,0.00,Vaernes / Trondheim
