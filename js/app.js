@@ -4,7 +4,7 @@
 // classes (built in js/texture-worker.js), reprojected every frame through
 // a projection that morphs Google-Maps-style between an orthographic globe
 // (zoomed out) and a flat equal-earth map (zoomed in). Pan is rotation, so
-// it is continuous and wraps forever.
+// it is continuous and wraps forever. Styled like pen on a notebook.
 
 // --- tweakables -----------------------------------------------------------
 const JACKET_MIN = 55; // °F — below this is "too cold" (keep worker in sync)
@@ -18,17 +18,33 @@ const K_MAX = 60;
 const K_GLOBE = 1.25; // below this: pure globe
 const K_FLAT = 2.75; // above this: pure flat map; between: the morph
 const LOCATE_K = 6; // zoom after geolocating (≈ continental scale)
-const COLOR_COLD = "#6a9fd8";
-const COLOR_JACKET = "#7cb342";
-const COLOR_HOT = "#e2725b";
-const COLOR_UNKNOWN = "#d9d9d9";
-const COLOR_OCEAN = "#fdfdfd";
+
+// palette — pen on a parchment notebook
+const COLOR_BG = "#f0efeb"; // parchment page
+const COLOR_OCEAN = "#e2ece9"; // azure mist
+const COLOR_COLD = "#cddafd"; // periwinkle
+const COLOR_JACKET = "#fde2e4"; // soft blush — the perfect date
+const COLOR_HOT = "#fff1e6"; // linen sand
+const COLOR_UNKNOWN = "#eae4e9"; // alabaster grey, hatched
+const COLOR_HATCH = "#cfc7bc"; // hatch stroke over unknown
+const INK = "#3f3a33";
+const INK_BORDER = "rgba(63,58,51,0.55)";
+const INK_STATE = "rgba(63,58,51,0.32)";
+const INK_GRID = "rgba(63,58,51,0.10)";
+const TEXT_COLD = "#6b83c4"; // legible ink versions for tooltip text
+const TEXT_JACKET = "#c96f88";
+const TEXT_HOT = "#bf8d5a";
 // ---------------------------------------------------------------------------
 
 const DEG = 180 / Math.PI;
 const DPR_CAP = 1.5;
 
 let land = null;
+let countryBorders = null;
+let admin1Lines = null;
+let countryLabels = [];
+let stateLabels = [];
+let cityLabels = [];
 let manifest = null;
 let landMask = null;
 let texture = null; // current year's class grid
@@ -40,6 +56,7 @@ let off = null; // offscreen canvas the raster is rendered into
 let offCtx = null;
 let cssW = 0;
 let cssH = 0;
+let stars = [];
 let interacting = false;
 let idleTimer = 0;
 let drawQueued = false;
@@ -167,7 +184,8 @@ const PALETTE = new Uint32Array([
   hexToU32(COLOR_HOT),
   hexToU32(COLOR_UNKNOWN),
 ]);
-const BG_U32 = hexToU32("#fdfdfd");
+const BG_U32 = hexToU32(COLOR_BG);
+const HATCH_U32 = hexToU32(COLOR_HATCH);
 
 let imgCache = { w: 0, h: 0, img: null, pix: null };
 
@@ -179,6 +197,12 @@ function texLookup(lonRad, latRad) {
   if (v < 0) v = 0;
   else if (v >= TEX_H) v = TEX_H - 1;
   return texture[v * TEX_W + u];
+}
+
+// class → pixel, with a diagonal pen hatch over "no data"
+function shade(cls, px, py) {
+  if (cls === 4 && (px + py) % 6 === 0) return HATCH_U32;
+  return PALETTE[cls];
 }
 
 function renderRaster(w, h, proj) {
@@ -252,7 +276,7 @@ function renderRaster(w, h, proj) {
             const Z = lz + (rz - lz) * fx;
             const lonR = Math.atan2(Y, X);
             const latR = Math.asin(Z / Math.sqrt(X * X + Y * Y + Z * Z));
-            pix[k] = PALETTE[texLookup(lonR, latR)];
+            pix[k] = shade(texLookup(lonR, latR), px, py);
           }
         }
       } else {
@@ -271,7 +295,7 @@ function renderRaster(w, h, proj) {
               pix[k] = BG_U32;
               continue;
             }
-            pix[k] = PALETTE[texLookup(ll[0] / DEG, ll[1] / DEG)];
+            pix[k] = shade(texLookup(ll[0] / DEG, ll[1] / DEG), px, py);
           }
         }
       }
@@ -280,24 +304,222 @@ function renderRaster(w, h, proj) {
   offCtx.putImageData(imgCache.img, 0, 0);
 }
 
+// --- overlays: stars, grid, borders, labels --------------------------------
+
+function mulberry32(a) {
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function makeStars() {
+  const rand = mulberry32(425); // deterministic, made-up sky
+  const n = Math.round((cssW * cssH) / 9000);
+  stars = [];
+  for (let i = 0; i < n; i++) {
+    stars.push({
+      x: rand(),
+      y: rand(),
+      r: 0.4 + rand() * 1.1,
+      a: 0.2 + rand() * 0.5,
+      sparkle: rand() < 0.09,
+    });
+  }
+}
+
+function drawStars(dpr, t) {
+  if (t >= 1) return;
+  const R = centerScale() * dpr + 10 * dpr; // stay outside the horizon
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const fade = (1 - t) ** 2;
+  ctx.save();
+  ctx.fillStyle = INK;
+  ctx.strokeStyle = INK;
+  for (const s of stars) {
+    const x = s.x * canvas.width;
+    const y = s.y * canvas.height;
+    if (Math.hypot(x - cx, y - cy) < R) continue;
+    ctx.globalAlpha = s.a * fade;
+    ctx.beginPath();
+    ctx.arc(x, y, s.r * dpr, 0, 2 * Math.PI);
+    ctx.fill();
+    if (s.sparkle) {
+      const L = 3.5 * dpr;
+      ctx.globalAlpha = s.a * fade * 0.6;
+      ctx.lineWidth = 0.5 * dpr;
+      ctx.beginPath();
+      ctx.moveTo(x - L, y);
+      ctx.lineTo(x + L, y);
+      ctx.moveTo(x, y - L);
+      ctx.lineTo(x, y + L);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function gridStep(k) {
+  return k < 3 ? 10 : k < 6 ? 5 : k < 12 ? 2 : k < 22 ? 1 : k < 40 ? 0.5 : 0.2;
+}
+
+// visible lon/lat window (lon may extend past ±180); null = whole world
+function visibleBounds(proj) {
+  let dMin = Infinity;
+  let dMax = -Infinity;
+  let laMin = 90;
+  let laMax = -90;
+  for (let j = 0; j <= 4; j++) {
+    for (let i = 0; i <= 4; i++) {
+      const x = (canvas.width * i) / 4;
+      const y = (canvas.height * j) / 4;
+      const ll = proj.invert([x, y]);
+      if (!ll || !isFinite(ll[0]) || !isFinite(ll[1])) return null;
+      const rt = proj(ll);
+      if (!rt || Math.hypot(rt[0] - x, rt[1] - y) > 3) return null;
+      const d = wrapLon(ll[0] - view.lon);
+      if (d < dMin) dMin = d;
+      if (d > dMax) dMax = d;
+      if (ll[1] < laMin) laMin = ll[1];
+      if (ll[1] > laMax) laMax = ll[1];
+    }
+  }
+  return {
+    lon0: view.lon + dMin - 2,
+    lon1: view.lon + dMax + 2,
+    lat0: Math.max(-90, laMin - 2),
+    lat1: Math.min(90, laMax + 2),
+  };
+}
+
+function drawLabels(proj, dpr) {
+  const k = view.k;
+  const clipRad = (90 + 90 * proj.morphT) / DEG - 0.06;
+  const center = [view.lon, view.lat];
+  const placed = [];
+  const collides = (r) => {
+    for (const q of placed)
+      if (
+        r[0] < q[0] + q[2] &&
+        r[0] + r[2] > q[0] &&
+        r[1] < q[1] + q[3] &&
+        r[1] + r[3] > q[1]
+      )
+        return true;
+    return false;
+  };
+  const put = (lon, lat, text, font, color, dot) => {
+    if (d3.geoDistance([lon, lat], center) > clipRad) return;
+    const p = proj([lon, lat]);
+    if (
+      !p ||
+      p[0] < -60 ||
+      p[0] > canvas.width + 60 ||
+      p[1] < -20 ||
+      p[1] > canvas.height + 20
+    )
+      return;
+    ctx.font = font;
+    const w = ctx.measureText(text).width;
+    const hh = 9 * dpr;
+    const rect = dot
+      ? [p[0] - 3 * dpr, p[1] - hh, w + 9 * dpr, hh * 2]
+      : [p[0] - w / 2 - 3, p[1] - hh, w + 6, hh * 2];
+    if (collides(rect)) return;
+    placed.push(rect);
+    ctx.fillStyle = color;
+    if (dot) {
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 1.4 * dpr, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.textAlign = "left";
+      ctx.fillText(text, p[0] + 5 * dpr, p[1] - 1 * dpr);
+    } else {
+      ctx.textAlign = "center";
+      ctx.fillText(text, p[0], p[1]);
+    }
+  };
+  ctx.textBaseline = "middle";
+  try {
+    ctx.letterSpacing = `${0.8 * dpr}px`;
+  } catch (e) {}
+  if (k < 30) {
+    const maxN = k < 2 ? 40 : k < 4 ? 90 : 300;
+    const size = Math.round(Math.min(16, 10.5 + k * 0.6) * dpr);
+    const font = `600 ${size}px Georgia, serif`;
+    for (const c of countryLabels.slice(0, maxN))
+      put(c.lon, c.lat, c.name.toUpperCase(), font, "rgba(63,58,51,0.78)");
+  }
+  try {
+    ctx.letterSpacing = "0px";
+  } catch (e) {}
+  if (k >= 4.5) {
+    const font = `italic ${Math.round(12 * dpr)}px Georgia, serif`;
+    for (const s of stateLabels)
+      put(s.lon, s.lat, s.name, font, "rgba(63,58,51,0.6)");
+  }
+  if (k >= 5) {
+    const maxRank = k < 8 ? 0 : k < 11 ? 1 : k < 15 ? 3 : k < 22 ? 5 : k < 32 ? 7 : 10;
+    const font = `italic ${Math.round(11 * dpr)}px Georgia, serif`;
+    let drawn = 0;
+    for (const c of cityLabels) {
+      if (c.rank > maxRank) break; // sorted by rank, then population
+      put(c.lon, c.lat, c.name, font, INK, true);
+      if (++drawn >= 90) break;
+    }
+  }
+}
+
 function drawVectors(dpr) {
   const proj = makeProjection(canvas.width, canvas.height, dpr);
   const path = d3.geoPath(proj, ctx);
+  drawStars(dpr, proj.morphT);
+  // the grid — notebook ruling that densifies as you zoom in
+  const step = gridStep(view.k);
+  const grat = d3.geoGraticule().step([step, step]);
+  if (step < 10) {
+    const b = visibleBounds(proj);
+    if (b) grat.extent([[b.lon0, b.lat0], [b.lon1, b.lat1]]);
+  }
   ctx.beginPath();
-  path(d3.geoGraticule10());
-  ctx.lineWidth = 0.5 * dpr;
-  ctx.strokeStyle = "rgba(0,0,0,0.08)";
+  path(grat());
+  ctx.lineWidth = 0.55 * dpr;
+  ctx.strokeStyle = INK_GRID;
   ctx.stroke();
+  // state/province borders: dashed pen lines
+  if (view.k >= 3.5 && admin1Lines) {
+    ctx.save();
+    ctx.setLineDash([4 * dpr, 3 * dpr]);
+    ctx.beginPath();
+    path(admin1Lines);
+    ctx.lineWidth = 0.6 * dpr;
+    ctx.strokeStyle = INK_STATE;
+    ctx.stroke();
+    ctx.restore();
+  }
+  // country borders
+  ctx.beginPath();
+  path(countryBorders);
+  ctx.lineWidth = 0.7 * dpr;
+  ctx.strokeStyle = INK_BORDER;
+  ctx.stroke();
+  // coastlines
   ctx.beginPath();
   path(land);
-  ctx.lineWidth = 0.6 * dpr;
-  ctx.strokeStyle = "#444";
+  ctx.lineWidth = 0.8 * dpr;
+  ctx.strokeStyle = INK;
   ctx.stroke();
+  // the horizon
   ctx.beginPath();
   path({ type: "Sphere" });
   ctx.lineWidth = 1 * dpr;
-  ctx.strokeStyle = "#999";
+  ctx.strokeStyle = "rgba(63,58,51,0.7)";
   ctx.stroke();
+  drawLabels(proj, dpr);
 }
 
 function draw(full) {
@@ -357,9 +579,9 @@ function kNearest(rows, lat, lon, k) {
 }
 
 function classify(temp) {
-  if (temp < JACKET_MIN) return { label: "Too cold", color: COLOR_COLD };
-  if (temp > JACKET_MAX) return { label: "Too hot", color: COLOR_HOT };
-  return { label: "All you need is a light jacket ✓", color: COLOR_JACKET };
+  if (temp < JACKET_MIN) return { label: "Too cold", color: TEXT_COLD };
+  if (temp > JACKET_MAX) return { label: "Too hot", color: TEXT_HOT };
+  return { label: "All you need is a light jacket ✓", color: TEXT_JACKET };
 }
 
 function tooltipHtml(lat, lon, rows) {
@@ -442,11 +664,29 @@ document.addEventListener("alpine:init", () => {
     tooltip: { show: false, x: 0, y: 0, html: "" },
 
     async init() {
-      const [topo, mf] = await Promise.all([
-        d3.json("./data/land-110m.json"),
+      const [topo, mf, admin1, states, cities] = await Promise.all([
+        d3.json("./data/countries-50m.json"),
         d3.json("./data/manifest.json"),
+        d3.json("./data/admin1-lines.json"),
+        d3.csv("./data/states.csv", d3.autoType),
+        d3.csv("./data/cities.csv", d3.autoType),
       ]);
       land = topojson.feature(topo, topo.objects.land);
+      countryBorders = topojson.mesh(
+        topo,
+        topo.objects.countries,
+        (a, b) => a !== b
+      );
+      countryLabels = topojson
+        .feature(topo, topo.objects.countries)
+        .features.map((f) => {
+          const [lon, lat] = d3.geoCentroid(f);
+          return { name: f.properties.name, lon, lat, area: d3.geoArea(f) };
+        })
+        .sort((a, b) => b.area - a.area);
+      admin1Lines = admin1;
+      stateLabels = states;
+      cityLabels = cities;
       manifest = mf;
       buildLandMask();
       // gray placeholder until the first real texture lands
@@ -489,6 +729,7 @@ document.addEventListener("alpine:init", () => {
       canvas.height = Math.round(cssH * dpr);
       canvas.style.width = cssW + "px";
       canvas.style.height = cssH + "px";
+      makeStars();
       requestDraw(true);
     },
 

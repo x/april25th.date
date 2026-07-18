@@ -1,6 +1,10 @@
 :root:not([data-theme="dark"]),
 [data-theme="light"] {
-  --background-color: #fdfdfd;
+  --background-color: #f0efeb; /* parchment */
+  --color: #3f3a33; /* ink */
+  --primary: #d98aa3; /* rose ink accent (slider) */
+  --primary-hover: #c97a93;
+  --primary-focus: rgba(217, 138, 163, 0.25);
 }
 
 html,
@@ -9,33 +13,16 @@ body {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
   height: 100dvh;
   margin: 0;
   overflow: hidden;
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
 }
 
-body > header {
-  padding: 1rem 1.5rem 0.5rem;
-}
-
-body > header hgroup {
-  margin-bottom: 0;
-}
-
-body > header h1 {
-  margin-bottom: 0.1rem;
-}
-
-body > header p {
-  font-style: italic;
-}
-
+/* full-bleed map; everything else floats above it */
 #map-wrap {
-  flex: 1;
-  min-height: 0;
-  padding: 0;
+  position: fixed;
+  inset: 0;
   overflow: hidden;
 }
 
@@ -44,17 +31,43 @@ body > header p {
   touch-action: none;
 }
 
+body > header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: 1.1rem 1.5rem 0;
+  pointer-events: none;
+}
+
+body > header hgroup {
+  margin-bottom: 0;
+}
+
+body > header h1 {
+  margin-bottom: 0.1rem;
+  font-family: Georgia, serif;
+  color: #3f3a33;
+}
+
+body > header p {
+  font-style: italic;
+  color: #6d675e;
+}
+
 #tooltip {
   position: fixed;
   pointer-events: none;
   z-index: 10;
-  background: #fdfdfd;
-  border: 1px solid #000;
+  background: rgba(240, 239, 235, 0.94);
+  border: 1px solid #3f3a33;
   border-radius: 0.25rem;
   padding: 0.4rem 0.6rem;
   font-size: 0.8rem;
   line-height: 1.4;
   max-width: 16rem;
+  color: #3f3a33;
 }
 
 #tooltip .verdict {
@@ -62,26 +75,44 @@ body > header p {
 }
 
 #tooltip .muted {
-  color: var(--muted-color, #777);
+  color: #877f73;
   font-size: 0.72rem;
 }
 
 #controls {
-  padding: 0.5rem 1.5rem 1rem;
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: min(34rem, calc(100vw - 2rem));
   text-align: center;
+  pointer-events: none;
+}
+
+#controls input[type="range"],
+#controls output {
+  pointer-events: auto;
 }
 
 #controls input[type="range"] {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
+}
+
+#controls output {
+  font-size: 0.9rem;
+  color: #3f3a33;
 }
 
 #legend {
   display: flex;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 1.1rem;
   flex-wrap: wrap;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.82rem;
+  margin-bottom: 0.45rem;
+  color: #6d675e;
+  font-style: italic;
 }
 
 .swatch {
@@ -89,29 +120,36 @@ body > header p {
   width: 0.85em;
   height: 0.85em;
   border-radius: 2px;
+  border: 1px solid rgba(63, 58, 51, 0.35);
   vertical-align: baseline;
   margin-right: 0.15rem;
 }
 
 .swatch.cold {
-  background: #6a9fd8;
+  background: #cddafd; /* periwinkle */
 }
 
 .swatch.jacket {
-  background: #7cb342;
+  background: #fde2e4; /* soft blush */
 }
 
 .swatch.hot {
-  background: #e2725b;
+  background: #fff1e6; /* linen sand */
 }
 
 .swatch.unknown {
-  background: #d9d9d9;
+  background: repeating-linear-gradient(
+    45deg,
+    #eae4e9,
+    #eae4e9 2px,
+    #cfc7bc 2px,
+    #cfc7bc 3px
+  );
 }
 
 @media (max-width: 640px) {
   body > header {
-    padding: 0.75rem 1rem 0.25rem;
+    padding: 0.75rem 1rem 0;
   }
 
   body > header h1 {
