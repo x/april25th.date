@@ -1,31 +1,53 @@
 // april25th.date — was it light jacket weather?
+//
+// Custom canvas renderer: each year is a TW×TH equirectangular texture of
+// classes (built in js/texture-worker.js), reprojected every frame through
+// a projection that morphs Google-Maps-style between an orthographic globe
+// (zoomed out) and a flat equal-earth map (zoomed in). Pan is rotation, so
+// it is continuous and wraps forever.
 
 // --- tweakables -----------------------------------------------------------
-const JACKET_MIN = 55; // °F — below this is "too cold"
+const JACKET_MIN = 55; // °F — below this is "too cold" (keep worker in sync)
 const JACKET_MAX = 70; // °F — above this is "too hot"
 const MAX_STATION_KM = 500; // beyond this from any station → "no data"
 const K_NEIGHBORS = 5; // stations used for tooltip interpolation + CI
-const LOCATE_ZOOM = 6; // initial zoom on the user's location (6 ≈ continental US)
-const MAX_ZOOM = 80;
+const TEX_W = 1800; // texture resolution: 0.2° cells
+const TEX_H = 900;
+const K_MIN = 0.9; // zoom range; k=1 fits the globe on screen
+const K_MAX = 60;
+const K_GLOBE = 1.25; // below this: pure globe
+const K_FLAT = 2.75; // above this: pure flat map; between: the morph
+const LOCATE_K = 6; // zoom after geolocating (≈ continental scale)
 const COLOR_COLD = "#6a9fd8";
 const COLOR_JACKET = "#7cb342";
 const COLOR_HOT = "#e2725b";
 const COLOR_UNKNOWN = "#d9d9d9";
+const COLOR_OCEAN = "#fdfdfd";
 // ---------------------------------------------------------------------------
 
-const KM_PER_DEG = 111.32; // one degree of latitude (or equator longitude)
+const DEG = 180 / Math.PI;
+const DPR_CAP = 1.5;
 
-let land = null; // GeoJSON land feature, loaded once
+let land = null;
 let manifest = null;
-let projection = null; // the exact d3 projection instance Plot renders with
-let plotW = 0; // frame size passed to Plot
-let plotH = 0;
-let currentRows = []; // stations for the year on screen
-let renderedTransform = d3.zoomIdentity; // zoom transform baked into `projection`
-let zoomBehavior = null;
-let gesturing = false; // mid-gesture the svg is CSS-transformed; hover math is off
+let landMask = null;
+let texture = null; // current year's class grid
+let currentRows = []; // current year's stations, for the tooltip
+let view = { lon: -30, lat: 25, k: 1 };
+let canvas = null;
+let ctx = null;
+let off = null; // offscreen canvas the raster is rendered into
+let offCtx = null;
+let cssW = 0;
+let cssH = 0;
+let interacting = false;
+let idleTimer = 0;
+let drawQueued = false;
+let wantFull = false;
+let worker = null;
 
-const yearCache = new Map(); // year -> rows (kept out of Alpine's proxies)
+const yearCache = new Map(); // year -> row promise
+const texCache = new Map(); // year -> Uint8Array (small LRU)
 
 function loadYear(year) {
   if (!yearCache.has(year)) {
@@ -40,85 +62,270 @@ function loadYear(year) {
   return yearCache.get(year);
 }
 
-// --- map -------------------------------------------------------------------
+// --- projection ------------------------------------------------------------
 
-function baseProjection(width, height) {
-  return d3
-    .geoEqualEarth()
-    .fitExtent([[2, 2], [width - 2, height - 2]], { type: "Sphere" });
+// Normalize equal-earth so its scale at the map center matches the unit
+// sphere of the orthographic raw — the morph then keeps the center steady.
+const E_NORM = d3.geoEqualEarthRaw(1e-4, 0)[0] / 1e-4;
+const normEqualEarthRaw = (l, p) => {
+  const q = d3.geoEqualEarthRaw(l, p);
+  return [q[0] / E_NORM, q[1] / E_NORM];
+};
+normEqualEarthRaw.invert = (x, y) =>
+  d3.geoEqualEarthRaw.invert(x * E_NORM, y * E_NORM);
+
+function morphT(k) {
+  const u = Math.max(0, Math.min(1, (k - K_GLOBE) / (K_FLAT - K_GLOBE)));
+  return u * u * (3 - 2 * u); // smoothstep
 }
 
-// The world-fit projection with the current zoom/pan transform baked in,
-// so both Plot's rendering and our hover inversion share one instance.
-function makeProjection(width, height, t) {
-  const proj = baseProjection(width, height);
-  const [bx, by] = proj.translate();
-  return proj
-    .scale(proj.scale() * t.k)
-    .translate([t.k * bx + t.x, t.k * by + t.y]);
+function blendRaw(t) {
+  if (t <= 0) return d3.geoOrthographicRaw;
+  if (t >= 1) return normEqualEarthRaw;
+  const o = d3.geoOrthographicRaw;
+  const e = normEqualEarthRaw;
+  const raw = (l, p) => {
+    const a = o(l, p);
+    const b = e(l, p);
+    return [(1 - t) * a[0] + t * b[0], (1 - t) * a[1] + t * b[1]];
+  };
+  // Numeric Newton inversion of the blend. The visible longitude range
+  // grows from a hemisphere (t=0) to the whole world (t=1) as it unrolls.
+  const lonLimit = Math.PI * (0.5 + 0.5 * t);
+  raw.invert = (x, y) => {
+    let g = t < 0.5 ? o.invert(x, y) : e.invert(x, y);
+    if (!g || !isFinite(g[0]) || !isFinite(g[1])) g = [0, 0];
+    let l = g[0];
+    let p = g[1];
+    for (let i = 0; i < 10; i++) {
+      const f = raw(l, p);
+      const dx = x - f[0];
+      const dy = y - f[1];
+      if (dx * dx + dy * dy < 1e-12) break;
+      const h = 1e-5;
+      const fl = raw(l + h, p);
+      const fp = raw(l, p + h);
+      const a = (fl[0] - f[0]) / h;
+      const b = (fp[0] - f[0]) / h;
+      const c = (fl[1] - f[1]) / h;
+      const d = (fp[1] - f[1]) / h;
+      const det = a * d - b * c;
+      if (!det) break;
+      l += Math.max(-0.5, Math.min(0.5, (dx * d - dy * b) / det));
+      p += Math.max(-0.5, Math.min(0.5, (dy * a - dx * c) / det));
+    }
+    if (Math.abs(l) > lonLimit || Math.abs(p) > Math.PI / 2 + 1e-6)
+      return [NaN, NaN];
+    return [l, p];
+  };
+  return raw;
 }
 
-// Barycentric interpolation between stations, then gray out every raster
-// cell farther than MAX_STATION_KM from its nearest station.
-function maskedBarycentric(index, width, height, X, Y, V) {
-  const values = Plot.interpolatorBarycentric()(index, width, height, X, Y, V);
-  if (index.length === 0) return values;
-  // km → raster px: measure one degree of longitude at the equator, then
-  // account for the raster grid being plot-pixels / pixelSize. The projection
-  // includes the zoom scale, so the mask stays 500 geographic km at any zoom.
-  const p0 = projection([0, 0]);
-  const p1 = projection([1, 0]);
-  const plotPxPerKm = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) / KM_PER_DEG;
-  const maxPx = MAX_STATION_KM * plotPxPerKm * (width / plotW);
-  const maxPx2 = maxPx * maxPx;
-  const delaunay = d3.Delaunay.from(
-    index,
-    (i) => X[i],
-    (i) => Y[i]
-  );
-  let j = 0; // warm start: consecutive cells are neighbors
-  for (let y = 0, k = 0; y < height; ++y) {
-    for (let x = 0; x < width; ++x, ++k) {
-      j = delaunay.find(x + 0.5, y + 0.5, j);
-      const i = index[j];
-      const dx = X[i] - (x + 0.5);
-      const dy = Y[i] - (y + 0.5);
-      if (dx * dx + dy * dy > maxPx2) values[k] = NaN;
+// px per radian at the view center, in css pixels
+function centerScale() {
+  return (Math.min(cssW, cssH) / 2 - 8) * view.k;
+}
+
+function makeProjection(w, h, pxScale) {
+  const t = morphT(view.k);
+  const p = d3
+    .geoProjection(blendRaw(t))
+    .rotate([-view.lon, -view.lat])
+    .scale(centerScale() * pxScale)
+    .translate([w / 2, h / 2])
+    .precision(0.5);
+  if (t < 1) p.clipAngle(Math.min(179.9, 90 + 90 * t));
+  p.morphT = t;
+  return p;
+}
+
+function invertClient(clientX, clientY) {
+  if (!canvas) return null;
+  const r = canvas.getBoundingClientRect();
+  const proj = makeProjection(cssW, cssH, 1);
+  const ll = proj.invert([clientX - r.left, clientY - r.top]);
+  if (!ll || !isFinite(ll[0]) || !isFinite(ll[1])) return null;
+  const rt = proj(ll); // round-trip: reject off-globe junk
+  if (
+    !rt ||
+    Math.hypot(rt[0] - (clientX - r.left), rt[1] - (clientY - r.top)) > 2
+  )
+    return null;
+  return ll;
+}
+
+// --- raster renderer -------------------------------------------------------
+
+function hexToU32(hex) {
+  const v = parseInt(hex.slice(1), 16);
+  return (255 << 24) | ((v & 255) << 16) | (v & 0xff00) | (v >> 16);
+}
+const PALETTE = new Uint32Array([
+  hexToU32(COLOR_OCEAN),
+  hexToU32(COLOR_COLD),
+  hexToU32(COLOR_JACKET),
+  hexToU32(COLOR_HOT),
+  hexToU32(COLOR_UNKNOWN),
+]);
+const BG_U32 = hexToU32("#fdfdfd");
+
+let imgCache = { w: 0, h: 0, img: null, pix: null };
+
+function texLookup(lonRad, latRad) {
+  let u = (((lonRad * DEG + 180) / 360) * TEX_W) | 0;
+  let v = (((90 - latRad * DEG) / 180) * TEX_H) | 0;
+  if (u < 0) u = 0;
+  else if (u >= TEX_W) u = TEX_W - 1;
+  if (v < 0) v = 0;
+  else if (v >= TEX_H) v = TEX_H - 1;
+  return texture[v * TEX_W + u];
+}
+
+function renderRaster(w, h, proj) {
+  if (imgCache.w !== w || imgCache.h !== h) {
+    const img = offCtx.createImageData(w, h);
+    imgCache = { w, h, img, pix: new Uint32Array(img.data.buffer) };
+  }
+  const pix = imgCache.pix;
+  const Q = 16; // mesh cell size in raster px
+  const nx = Math.floor(w / Q) + 2;
+  const ny = Math.floor(h / Q) + 2;
+  const vx = new Float32Array(nx * ny);
+  const vy = new Float32Array(nx * ny);
+  const vz = new Float32Array(nx * ny);
+  const ok = new Uint8Array(nx * ny);
+  const pt = [0, 0];
+  for (let j = 0; j < ny; j++) {
+    for (let i = 0; i < nx; i++) {
+      pt[0] = i * Q;
+      pt[1] = j * Q;
+      const ll = proj.invert(pt);
+      if (!ll || !isFinite(ll[0]) || !isFinite(ll[1])) continue;
+      const rt = proj(ll);
+      if (!rt || Math.hypot(rt[0] - pt[0], rt[1] - pt[1]) > 1.5) continue;
+      const m = j * nx + i;
+      const lo = ll[0] / DEG;
+      const la = ll[1] / DEG;
+      vx[m] = Math.cos(la) * Math.cos(lo);
+      vy[m] = Math.cos(la) * Math.sin(lo);
+      vz[m] = Math.sin(la);
+      ok[m] = 1;
     }
   }
-  return values;
+  const COS_MAX = Math.cos(12 / DEG);
+  for (let j = 0; j < ny - 1; j++) {
+    const y0 = j * Q;
+    const y1 = Math.min(h, y0 + Q);
+    for (let i = 0; i < nx - 1; i++) {
+      const x0 = i * Q;
+      const x1 = Math.min(w, x0 + Q);
+      if (x0 >= w || y0 >= h) continue;
+      const a = j * nx + i;
+      const b = a + 1;
+      const c = a + nx;
+      const d = c + 1;
+      const nOk = ok[a] + ok[b] + ok[c] + ok[d];
+      if (nOk === 0) {
+        for (let py = y0; py < y1; py++)
+          for (let px = x0, k = py * w + x0; px < x1; px++, k++)
+            pix[k] = BG_U32;
+        continue;
+      }
+      const flat =
+        nOk === 4 &&
+        vx[a] * vx[d] + vy[a] * vy[d] + vz[a] * vz[d] > COS_MAX &&
+        vx[b] * vx[c] + vy[b] * vy[c] + vz[b] * vz[c] > COS_MAX;
+      if (flat) {
+        // bilinear interpolation of unit vectors across the mesh cell
+        for (let py = y0; py < y1; py++) {
+          const fy = (py - y0) / Q;
+          const lx = vx[a] + (vx[c] - vx[a]) * fy;
+          const ly = vy[a] + (vy[c] - vy[a]) * fy;
+          const lz = vz[a] + (vz[c] - vz[a]) * fy;
+          const rx = vx[b] + (vx[d] - vx[b]) * fy;
+          const ry = vy[b] + (vy[d] - vy[b]) * fy;
+          const rz = vz[b] + (vz[d] - vz[b]) * fy;
+          for (let px = x0, k = py * w + x0; px < x1; px++, k++) {
+            const fx = (px - x0) / Q;
+            const X = lx + (rx - lx) * fx;
+            const Y = ly + (ry - ly) * fx;
+            const Z = lz + (rz - lz) * fx;
+            const lonR = Math.atan2(Y, X);
+            const latR = Math.asin(Z / Math.sqrt(X * X + Y * Y + Z * Z));
+            pix[k] = PALETTE[texLookup(lonR, latR)];
+          }
+        }
+      } else {
+        // horizon/edge cells: exact per-pixel inversion
+        for (let py = y0; py < y1; py++) {
+          for (let px = x0, k = py * w + x0; px < x1; px++, k++) {
+            pt[0] = px + 0.5;
+            pt[1] = py + 0.5;
+            const ll = proj.invert(pt);
+            if (!ll || !isFinite(ll[0]) || !isFinite(ll[1])) {
+              pix[k] = BG_U32;
+              continue;
+            }
+            const rt = proj(ll);
+            if (!rt || Math.hypot(rt[0] - pt[0], rt[1] - pt[1]) > 1.5) {
+              pix[k] = BG_U32;
+              continue;
+            }
+            pix[k] = PALETTE[texLookup(ll[0] / DEG, ll[1] / DEG)];
+          }
+        }
+      }
+    }
+  }
+  offCtx.putImageData(imgCache.img, 0, 0);
 }
 
-function renderMap(rows, width, height) {
-  plotW = width;
-  plotH = height;
-  return Plot.plot({
-    width,
-    height,
-    margin: 0,
-    style: { background: "transparent", overflow: "hidden" },
-    projection: () => (projection = makeProjection(width, height, renderedTransform)),
-    color: {
-      type: "threshold",
-      domain: [JACKET_MIN, JACKET_MAX],
-      range: [COLOR_COLD, COLOR_JACKET, COLOR_HOT],
-      unknown: COLOR_UNKNOWN,
-    },
-    marks: [
-      Plot.graticule({ strokeOpacity: 0.08 }),
-      rows.length >= 3
-        ? Plot.raster(rows, {
-            x: "lon",
-            y: "lat",
-            fill: "temp",
-            pixelSize: 2,
-            interpolate: maskedBarycentric,
-            clip: land,
-          })
-        : Plot.dot(rows, { x: "lon", y: "lat", fill: "temp", r: 4 }),
-      Plot.geo(land, { stroke: "#444", strokeWidth: 0.5 }),
-      Plot.sphere({ stroke: "#999" }),
-    ],
+function drawVectors(dpr) {
+  const proj = makeProjection(canvas.width, canvas.height, dpr);
+  const path = d3.geoPath(proj, ctx);
+  ctx.beginPath();
+  path(d3.geoGraticule10());
+  ctx.lineWidth = 0.5 * dpr;
+  ctx.strokeStyle = "rgba(0,0,0,0.08)";
+  ctx.stroke();
+  ctx.beginPath();
+  path(land);
+  ctx.lineWidth = 0.6 * dpr;
+  ctx.strokeStyle = "#444";
+  ctx.stroke();
+  ctx.beginPath();
+  path({ type: "Sphere" });
+  ctx.lineWidth = 1 * dpr;
+  ctx.strokeStyle = "#999";
+  ctx.stroke();
+}
+
+function draw(full) {
+  if (!canvas || !texture) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+  const scale = full ? dpr : 0.5; // fast frames render the raster at half res
+  const w = Math.max(2, Math.round(cssW * scale));
+  const h = Math.max(2, Math.round(cssH * scale));
+  if (off.width !== w || off.height !== h) {
+    off.width = w;
+    off.height = h;
+  }
+  renderRaster(w, h, makeProjection(w, h, scale));
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+  drawVectors(dpr);
+}
+
+function requestDraw(full) {
+  wantFull = wantFull || full;
+  if (drawQueued) return;
+  drawQueued = true;
+  requestAnimationFrame(() => {
+    drawQueued = false;
+    const f = wantFull;
+    wantFull = false;
+    draw(f);
   });
 }
 
@@ -179,7 +386,7 @@ function tooltipHtml(lat, lon, rows) {
     <span class="muted">${cell} · nearest: ${near[0].name} (${Math.round(d0)} km)</span>`;
 }
 
-// --- app -------------------------------------------------------------------
+// --- helpers ---------------------------------------------------------------
 
 function debounce(fn, ms) {
   let t;
@@ -189,12 +396,49 @@ function debounce(fn, ms) {
   };
 }
 
+function wrapLon(l) {
+  return ((((l + 180) % 360) + 360) % 360) - 180;
+}
+
+function clampLat(l) {
+  return Math.max(-85, Math.min(85, l));
+}
+
+function interactingPulse() {
+  interacting = true;
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    interacting = false;
+    requestDraw(true);
+  }, 200);
+}
+
+function buildLandMask() {
+  const c = document.createElement("canvas");
+  c.width = TEX_W;
+  c.height = TEX_H;
+  const cx = c.getContext("2d", { willReadFrequently: true });
+  const eq = d3
+    .geoEquirectangular()
+    .scale(TEX_W / (2 * Math.PI))
+    .translate([TEX_W / 2, TEX_H / 2]);
+  cx.fillStyle = "#000";
+  cx.beginPath();
+  d3.geoPath(eq, cx)(land);
+  cx.fill();
+  const data = cx.getImageData(0, 0, TEX_W, TEX_H).data;
+  landMask = new Uint8Array(TEX_W * TEX_H);
+  for (let i = 0; i < landMask.length; i++)
+    landMask[i] = data[i * 4 + 3] > 127 ? 1 : 0;
+}
+
+// --- app -------------------------------------------------------------------
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("april25", () => ({
     year: 2025,
     stationCount: 0,
     loading: true,
-    renderId: 0,
     tooltip: { show: false, x: 0, y: 0, html: "" },
 
     async init() {
@@ -204,117 +448,211 @@ document.addEventListener("alpine:init", () => {
       ]);
       land = topojson.feature(topo, topo.objects.land);
       manifest = mf;
-      this.setupZoom();
+      buildLandMask();
+      // gray placeholder until the first real texture lands
+      texture = Uint8Array.from(landMask, (m) => (m ? 4 : 0));
+
+      worker = new Worker("./js/texture-worker.js");
+      worker.postMessage({ type: "init", tw: TEX_W, th: TEX_H, landMask });
+      worker.onmessage = (e) => {
+        texCache.set(e.data.year, e.data.classes);
+        if (texCache.size > 16)
+          texCache.delete(texCache.keys().next().value);
+        if (e.data.year === this.year) {
+          texture = e.data.classes;
+          this.loading = false;
+          requestDraw(true);
+        }
+      };
+
+      canvas = document.getElementById("globe");
+      ctx = canvas.getContext("2d");
+      off = document.createElement("canvas");
+      offCtx = off.getContext("2d");
+      this.resize();
+      this.setupGestures();
       this.setupHover();
-      await this.render();
+      await this.setYear(this.year);
       this.locate();
       window.addEventListener(
         "resize",
-        debounce(() => this.render(), 200)
+        debounce(() => this.resize(), 150)
       );
     },
 
-    // Scroll to zoom, drag to pan. During the gesture the svg gets a cheap
-    // CSS transform; on gesture end we re-render crisply with the transform
-    // baked into the projection.
-    setupZoom() {
-      zoomBehavior = d3
-        .zoom()
-        .scaleExtent([1, MAX_ZOOM])
-        .on("start", () => {
-          gesturing = true;
-          this.tooltip.show = false;
-        })
-        .on("zoom", (e) => {
-          const svg = document.querySelector("#map svg");
-          if (!svg) return;
-          const t = e.transform;
-          const r = renderedTransform;
-          const k = t.k / r.k;
-          svg.style.transformOrigin = "0 0";
-          svg.style.transform = `translate(${t.x - k * r.x}px, ${t.y - k * r.y}px) scale(${k})`;
-        })
-        .on("end", (e) => {
-          gesturing = false;
-          const t = e.transform;
-          const r = renderedTransform;
-          if (t.k === r.k && t.x === r.x && t.y === r.y) return;
-          renderedTransform = t;
-          this.render();
-        });
-      d3.select("#map").call(zoomBehavior);
-    },
-
-    setupHover() {
-      const el = document.getElementById("map");
-      el.addEventListener("mousemove", (e) => this.onHover(e));
-      el.addEventListener("mouseleave", () => (this.tooltip.show = false));
+    resize() {
+      const wrap = document.getElementById("map-wrap");
+      cssW = wrap.clientWidth;
+      cssH = wrap.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+      canvas.style.width = cssW + "px";
+      canvas.style.height = cssH + "px";
+      requestDraw(true);
     },
 
     onYearInput: debounce(function () {
-      this.render();
-    }, 120),
+      this.setYear(this.year);
+    }, 150),
 
-    async render() {
-      const id = ++this.renderId;
+    async setYear(year) {
       this.loading = true;
-      const rows = await loadYear(this.year);
-      if (id !== this.renderId) return; // superseded while loading
-      const wrap = document.getElementById("map-wrap");
-      const aspect = 2.05; // equal-earth sphere is about 2.05:1
-      const width = Math.floor(Math.min(wrap.clientWidth, wrap.clientHeight * aspect));
-      const height = Math.floor(Math.min(wrap.clientHeight, width / aspect));
+      const rows = await loadYear(year);
+      if (year !== this.year) return;
       currentRows = rows;
-      const fig = renderMap(rows, width, height);
-      const map = document.getElementById("map");
-      map.style.width = width + "px"; // pin #map to the svg so zoom/hover
-      map.style.height = height + "px"; // coordinates line up exactly
-      map.replaceChildren(fig);
-      zoomBehavior
-        .extent([[0, 0], [width, height]])
-        .translateExtent([[0, 0], [width, height]]);
       this.stationCount = rows.length;
-      this.loading = false;
+      if (texCache.has(year)) {
+        texture = texCache.get(year);
+        this.loading = false;
+        requestDraw(true);
+        return;
+      }
+      const n = rows.length;
+      const la = new Float64Array(n);
+      const lo = new Float64Array(n);
+      const te = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        la[i] = rows[i].lat;
+        lo[i] = rows[i].lon;
+        te[i] = rows[i].temp;
+      }
+      worker.postMessage({ type: "year", year, lat: la, lon: lo, temp: te }, [
+        la.buffer,
+        lo.buffer,
+        te.buffer,
+      ]);
+      // old texture stays on screen until the worker replies
     },
 
-    // Fly to the user's location at continental scale, if they allow it.
+    // drag to pan (rotation — continuous, wraps), scroll/pinch to zoom
+    setupGestures() {
+      const pointers = new Map();
+      let pinchDist = 0;
+      canvas.style.touchAction = "none";
+      canvas.style.cursor = "grab";
+
+      canvas.addEventListener("pointerdown", (e) => {
+        canvas.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pointers.size === 2) {
+          const [p1, p2] = [...pointers.values()];
+          pinchDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        }
+        canvas.style.cursor = "grabbing";
+        this.tooltip.show = false;
+      });
+
+      canvas.addEventListener("pointermove", (e) => {
+        const p = pointers.get(e.pointerId);
+        if (!p) return;
+        const dx = e.clientX - p.x;
+        const dy = e.clientY - p.y;
+        p.x = e.clientX;
+        p.y = e.clientY;
+        if (pointers.size === 1) {
+          this.pan(dx, dy);
+        } else if (pointers.size === 2) {
+          const [p1, p2] = [...pointers.values()];
+          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          const mx = (p1.x + p2.x) / 2;
+          const my = (p1.y + p2.y) / 2;
+          this.pan(dx / 2, dy / 2);
+          if (pinchDist > 0) this.zoomAt(mx, my, dist / pinchDist);
+          pinchDist = dist;
+        }
+      });
+
+      const release = (e) => {
+        pointers.delete(e.pointerId);
+        if (pointers.size === 0) canvas.style.cursor = "grab";
+      };
+      canvas.addEventListener("pointerup", release);
+      canvas.addEventListener("pointercancel", release);
+
+      canvas.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          this.zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.002));
+          this.tooltip.show = false;
+        },
+        { passive: false }
+      );
+
+      canvas.addEventListener("dblclick", (e) => {
+        this.zoomAt(e.clientX, e.clientY, 2);
+      });
+    },
+
+    pan(dx, dy) {
+      const degPerPx = DEG / centerScale();
+      view.lon = wrapLon(view.lon - dx * degPerPx);
+      view.lat = clampLat(view.lat + dy * degPerPx);
+      interactingPulse();
+      requestDraw(false);
+    },
+
+    // zoom keeping the geographic point under the cursor fixed
+    zoomAt(cx, cy, factor) {
+      const before = invertClient(cx, cy);
+      view.k = Math.max(K_MIN, Math.min(K_MAX, view.k * factor));
+      if (before) {
+        const after = invertClient(cx, cy);
+        if (after) {
+          view.lon = wrapLon(view.lon + before[0] - after[0]);
+          view.lat = clampLat(view.lat + before[1] - after[1]);
+        }
+      }
+      interactingPulse();
+      requestDraw(false);
+    },
+
+    // Fly to the user's location, morphing from globe to flat on the way in.
     locate() {
       if (!navigator.geolocation) return;
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          const p = baseProjection(plotW, plotH)([
-            pos.coords.longitude,
-            pos.coords.latitude,
-          ]);
-          if (!p) return;
-          const k = LOCATE_ZOOM;
-          const t = d3.zoomIdentity
-            .translate(plotW / 2 - k * p[0], plotH / 2 - k * p[1])
-            .scale(k);
-          d3.select("#map")
-            .transition()
-            .duration(2000)
-            .call(zoomBehavior.transform, t);
+          const from = { ...view };
+          const to = {
+            lon: pos.coords.longitude,
+            lat: clampLat(pos.coords.latitude),
+            k: LOCATE_K,
+          };
+          let dLon = wrapLon(to.lon - from.lon);
+          const t0 = performance.now();
+          const dur = 2000;
+          const step = (now) => {
+            const u = Math.min(1, (now - t0) / dur);
+            const e = u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2;
+            view.lon = wrapLon(from.lon + dLon * e);
+            view.lat = from.lat + (to.lat - from.lat) * e;
+            view.k = Math.exp(
+              Math.log(from.k) + (Math.log(to.k) - Math.log(from.k)) * e
+            );
+            if (u < 1) {
+              requestDraw(false);
+              requestAnimationFrame(step);
+            } else {
+              requestDraw(true);
+            }
+          };
+          requestAnimationFrame(step);
         },
-        () => {}, // denied or unavailable: stay on the world view
+        () => {}, // denied or unavailable: stay on the globe
         { timeout: 8000, maximumAge: 3600000 }
       );
     },
 
+    setupHover() {
+      canvas.addEventListener("mousemove", (e) => this.onHover(e));
+      canvas.addEventListener("mouseleave", () => (this.tooltip.show = false));
+    },
+
     onHover(e) {
-      if (gesturing || !projection || currentRows.length === 0) {
-        this.tooltip.show = false;
-        return;
-      }
-      const svg = document.querySelector("#map svg");
-      if (!svg) return;
-      const r = svg.getBoundingClientRect();
-      const vb = svg.viewBox.baseVal;
-      const px = ((e.clientX - r.left) * vb.width) / r.width;
-      const py = ((e.clientY - r.top) * vb.height) / r.height;
-      const ll = projection.invert([px, py]);
-      const rt = ll && projection(ll); // round-trip: reject off-sphere junk
-      if (!rt || Math.hypot(rt[0] - px, rt[1] - py) > 0.5) {
+      if (interacting || currentRows.length === 0) return;
+      const ll = invertClient(e.clientX, e.clientY);
+      if (!ll) {
         this.tooltip.show = false;
         return;
       }

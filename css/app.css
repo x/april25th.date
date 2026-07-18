@@ -35,22 +35,13 @@ body > header p {
 #map-wrap {
   flex: 1;
   min-height: 0;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0;
+  overflow: hidden;
 }
 
-#map {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#map svg {
-  cursor: crosshair;
+#globe {
+  display: block;
+  touch-action: none;
 }
 
 #tooltip {
