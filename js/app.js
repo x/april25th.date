@@ -21,10 +21,10 @@ const LOCATE_K = 6; // zoom after geolocating (≈ continental scale)
 
 // palette — pen on a parchment notebook
 const COLOR_BG = "#f0efeb"; // parchment page
-const COLOR_OCEAN = "#e2ece9"; // azure mist
+const COLOR_OCEAN = "#bee1e6"; // light blue — open water
 const COLOR_COLD = "#cddafd"; // periwinkle
-const COLOR_JACKET = "#fde2e4"; // soft blush — the perfect date
-const COLOR_HOT = "#fff1e6"; // linen sand
+const COLOR_JACKET = "#e2ece9"; // azure mist — mild and just right
+const COLOR_HOT = "#fad2e1"; // petal frost — warm pink
 const COLOR_UNKNOWN = "#eae4e9"; // alabaster grey, hatched
 const COLOR_HATCH = "#cfc7bc"; // hatch stroke over unknown
 const INK = "#3f3a33";
@@ -32,8 +32,8 @@ const INK_BORDER = "rgba(63,58,51,0.55)";
 const INK_STATE = "rgba(63,58,51,0.32)";
 const INK_GRID = "rgba(63,58,51,0.10)";
 const TEXT_COLD = "#6b83c4"; // legible ink versions for tooltip text
-const TEXT_JACKET = "#c96f88";
-const TEXT_HOT = "#bf8d5a";
+const TEXT_JACKET = "#5f8f7d";
+const TEXT_HOT = "#c96f88";
 // ---------------------------------------------------------------------------
 
 const DEG = 180 / Math.PI;

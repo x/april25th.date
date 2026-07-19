@@ -23,6 +23,8 @@ body {
 #map-wrap {
   position: fixed;
   inset: 0;
+  padding: 0; /* undo Pico's main padding */
+  margin: 0;
   overflow: hidden;
 }
 
@@ -130,11 +132,11 @@ body > header p {
 }
 
 .swatch.jacket {
-  background: #fde2e4; /* soft blush */
+  background: #e2ece9; /* azure mist */
 }
 
 .swatch.hot {
-  background: #fff1e6; /* linen sand */
+  background: #fad2e1; /* petal frost */
 }
 
 .swatch.unknown {
