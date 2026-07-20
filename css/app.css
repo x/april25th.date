@@ -70,6 +70,20 @@ body > header p {
   line-height: 1.35;
 }
 
+body > header a {
+  pointer-events: auto; /* header itself is click-through */
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  text-decoration-color: #a89f92;
+}
+
+body > header a:hover {
+  color: #3f3a33;
+  text-decoration-style: solid;
+}
+
 #tooltip {
   position: fixed;
   pointer-events: none;
