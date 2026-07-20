@@ -667,36 +667,36 @@ function historySeries(lat, lon) {
 
 const QUIPS = {
   perfect: [
-    (p) => `Historically, this is exactly what Miss Rhode Island had in mind: ${p.j}% of Aprils here called for just a light jacket.`,
-    (p) => `The perfect date, practically guaranteed — light-jacket weather ${p.j}% of the time.`,
-    (p) => `This spot has April 25th down to a science. Bring the light jacket, need nothing else.`,
+    (p) => `Exactly what Miss Rhode Island had in mind: ${p.j}% of April 25ths here called for just a light jacket.`,
+    (p) => `The perfect date, practically guaranteed. Light-jacket weather ${p.j}% of the time.`,
+    (p) => `This spot LOVEs April 25th. Bring the light jacket, need nothing else.`,
   ],
   usuallyJacket: [
     (p) => `Most years, all you need here is a light jacket (${p.j}% of Aprils on record).`,
     (p) => `Usually just right. Pack the light jacket with confidence.`,
   ],
   alwaysHot: [
-    () => `Historically too hot. A light jacket here is a cry for help.`,
-    (p) => `Leave the jacket at home — it's been too hot ${p.h}% of Aprils.`,
+    () => `Historically too hot. Less light jacket and more sun screen.`,
+    (p) => `Leave the jacket at home. It's been too hot ${p.h}% of Aprils.`,
   ],
   usuallyHot: [
-    (p) => `More often than not, too hot (${p.h}% of years). The jacket is decorative.`,
-    () => `Usually too hot. Linen over light jacket.`,
+    (p) => `More often than not, too hot (${p.h}% of years). The jacket would be a choice.`,
+    () => `Usually too hot. Maybe a linen overshirt.`,
   ],
   alwaysCold: [
-    () => `Historically too cold. You'll want considerably more than a light jacket.`,
-    (p) => `A light jacket here is wishful thinking — too cold ${p.c}% of Aprils on record.`,
+    () => `Historically too cold. Maybe bring a puffy jacket that's light in spirit?`,
+    (p) => `Don't be caught in a light jacket. It's too cold ${p.c}% of Aprils on record.`,
   ],
   usuallyCold: [
     (p) => `Usually too cold (${p.c}% of years). The light jacket will need backup.`,
     () => `Most Aprils, the light jacket alone won't cut it. Bring layers.`,
   ],
   mixed: [
-    (p) => `This place can't commit: ${p.c}% too cold, ${p.j}% just right, ${p.h}% too hot. Pack options.`,
+    (p) => `${p.c}% too cold, ${p.h}% too hot, ${p.j}% light jacket weather. Pack options.`,
     () => `April 25th here is a coin flip. Layers are your friend.`,
   ],
   sparse: [
-    (p) => `Only ${p.n} Aprils on record near here — not enough to call it.`,
+    (p) => `Only ${p.n} Aprils on record near here. Not enough to call it.`,
   ],
 };
 
