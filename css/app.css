@@ -88,23 +88,15 @@ body > header a:hover {
   position: fixed;
   pointer-events: none;
   z-index: 10;
-  background: rgba(240, 239, 235, 0.94);
-  border: 1px solid #3f3a33;
-  border-radius: 0.25rem;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.8rem;
-  line-height: 1.4;
-  max-width: 16rem;
-  color: #3f3a33;
-}
-
-#tooltip .verdict {
-  font-weight: bold;
-}
-
-#tooltip .muted {
-  color: #877f73;
-  font-size: 0.72rem;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #6d675e;
+  white-space: nowrap;
+  /* parchment halo, like the header */
+  text-shadow:
+    0 0 3px #f0efeb,
+    0 0 6px #f0efeb,
+    0 0 12px #f0efeb;
 }
 
 [x-cloak] {
@@ -114,16 +106,15 @@ body > header a:hover {
 #history-panel {
   position: fixed;
   z-index: 8;
-  right: 1rem;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%);
-  width: 360px;
-  max-width: calc(100vw - 2rem);
-  background: rgba(240, 239, 235, 0.96);
+  transform: translate(-50%, -50%);
+  width: min(720px, calc(100vw - 2rem));
+  background: rgba(240, 239, 235, 0.97);
   border: 1px solid #3f3a33;
   border-radius: 0.3rem;
   box-shadow: 4px 4px 0 rgba(63, 58, 51, 0.12);
-  padding: 0.9rem 1rem 0.7rem;
+  padding: 1rem 1.2rem 0.8rem;
   color: #3f3a33;
 }
 
@@ -157,21 +148,17 @@ body > header a:hover {
   margin-bottom: 0.5rem;
 }
 
+#history-panel .detail {
+  font-size: 0.78rem;
+  color: #565047;
+  margin-bottom: 0.5rem;
+}
+
 #history-panel .note {
   font-size: 0.7rem;
   color: #877f73;
   margin-bottom: 0;
   margin-top: 0.3rem;
-}
-
-@media (max-width: 700px) {
-  #history-panel {
-    right: auto;
-    top: auto;
-    left: 50%;
-    bottom: 5.4rem;
-    transform: translateX(-50%);
-  }
 }
 
 #controls {

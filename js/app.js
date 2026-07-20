@@ -584,28 +584,25 @@ function classify(temp) {
   return { label: "All you need is a light jacket ✓", color: TEXT_JACKET };
 }
 
-function tooltipHtml(lat, lon, rows) {
+// IDW estimate at a cell from this year's stations, with CI and nearest
+function cellEstimate(lat, lon, rows) {
   const near = kNearest(rows, lat, lon, K_NEIGHBORS);
-  if (near.length === 0) return null;
-  const d0 = near[0].dist;
-  const cell = `${Math.abs(lat).toFixed(1)}°${lat >= 0 ? "N" : "S"}, ${Math.abs(lon).toFixed(1)}°${lon >= 0 ? "E" : "W"}`;
-  if (d0 > MAX_STATION_KM) {
-    return `<span class="verdict">No data</span><br>
-      <span class="muted">${cell} · nearest station ${Math.round(d0).toLocaleString()} km away</span>`;
-  }
-  // inverse-distance-weighted estimate + a distance-widened confidence interval
+  if (near.length === 0 || near[0].dist > MAX_STATION_KM) return null;
   const w = near.map((n) => 1 / Math.max(n.dist, 1) ** 2);
   const W = d3.sum(w);
   const temp = d3.sum(near, (n, i) => w[i] * n.temp) / W;
   const precip = d3.sum(near, (n, i) => w[i] * n.precip) / W;
   const sd = Math.sqrt(d3.sum(near, (n, i) => w[i] * (n.temp - temp) ** 2) / W);
-  const ci = 1.96 * sd * (1 + d0 / MAX_STATION_KM);
-  const v = classify(temp);
-  const tempC = ((temp - 32) * 5) / 9;
-  return `<span class="verdict" style="color:${v.color}">${v.label}</span><br>
-    ${temp.toFixed(1)} ± ${ci.toFixed(1)} °F <span class="muted">(${tempC.toFixed(1)} °C)</span><br>
-    precip ${precip.toFixed(2)} in reported<br>
-    <span class="muted">${cell} · nearest: ${near[0].name} (${Math.round(d0)} km)</span>`;
+  const ci = 1.96 * sd * (1 + near[0].dist / MAX_STATION_KM);
+  return { temp, precip, ci, nearest: near[0] };
+}
+
+// one pen-note line: "62.4 °F — all you need is a light jacket"
+function tooltipHtml(lat, lon, rows) {
+  const est = cellEstimate(lat, lon, rows);
+  if (!est) return null;
+  const v = classify(est.temp);
+  return `${est.temp.toFixed(1)} °F — ${v.label.toLowerCase().replace(" ✓", "")}`;
 }
 
 // --- click history ---------------------------------------------------------
@@ -748,9 +745,10 @@ function renderHistoryChart(series) {
   const temps = series.map((s) => s.temp);
   const lo = Math.min(Math.min(...temps) - 4, JACKET_MIN - 6);
   const hi = Math.max(Math.max(...temps) + 4, JACKET_MAX + 6);
+  const w = el.clientWidth || 330;
   const fig = Plot.plot({
-    width: Math.min(330, el.clientWidth || 330),
-    height: 170,
+    width: w,
+    height: Math.round(Math.max(170, Math.min(w * 0.52, 380))),
     marginLeft: 32,
     marginBottom: 22,
     style: {
@@ -838,7 +836,7 @@ document.addEventListener("alpine:init", () => {
     stationCount: 0,
     loading: true,
     tooltip: { show: false, x: 0, y: 0, html: "" },
-    panel: { show: false, title: "", summary: "", note: "" },
+    panel: { show: false, title: "", summary: "", detail: "", note: "" },
 
     async init() {
       const [topo, mf, admin1, states, cities] = await Promise.all([
@@ -1093,11 +1091,17 @@ document.addEventListener("alpine:init", () => {
       this.panel.show = true;
       this.panel.title = title;
       this.panel.summary = "Reading the archives…";
+      this.panel.detail = "";
       this.panel.note = "";
       document.getElementById("history-chart").replaceChildren();
       await ensureHistory();
+      await new Promise(requestAnimationFrame); // let the panel lay out
       const series = historySeries(lat, lon);
       this.panel.summary = quipFor(series, lat, lon);
+      const est = cellEstimate(lat, lon, currentRows);
+      this.panel.detail = est
+        ? `In ${this.year}: ${est.temp.toFixed(1)} ± ${est.ci.toFixed(1)} °F (${(((est.temp - 32) * 5) / 9).toFixed(1)} °C) · precip ${est.precip.toFixed(2)} in reported · nearest station: ${est.nearest.name} (${Math.round(est.nearest.dist)} km)`
+        : `In ${this.year}: no station data nearby.`;
       this.panel.note = series.length
         ? `April 25th mean temp, ${series.length} of ${hist.ny} years · interpolated from the ${K_NEIGHBORS} nearest stations`
         : "";
@@ -1123,10 +1127,10 @@ document.addEventListener("alpine:init", () => {
         this.tooltip.show = false;
         return;
       }
-      const flipX = e.clientX > window.innerWidth - 280;
-      const flipY = e.clientY > window.innerHeight - 140;
-      this.tooltip.x = flipX ? e.clientX - 272 : e.clientX + 14;
-      this.tooltip.y = flipY ? e.clientY - 120 : e.clientY + 14;
+      const flipX = e.clientX > window.innerWidth - 260;
+      const flipY = e.clientY > window.innerHeight - 60;
+      this.tooltip.x = flipX ? e.clientX - 250 : e.clientX + 14;
+      this.tooltip.y = flipY ? e.clientY - 34 : e.clientY + 16;
       this.tooltip.html = html;
       this.tooltip.show = true;
     },

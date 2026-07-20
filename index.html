@@ -39,6 +39,7 @@
         x-show="panel.show"
         x-cloak
         @keydown.escape.window="panel.show = false"
+        @pointerdown.outside="panel.show = false"
       >
         <button
           class="close"
@@ -49,6 +50,7 @@
         </button>
         <h3 x-text="panel.title"></h3>
         <p class="summary" x-text="panel.summary"></p>
+        <p class="detail" x-text="panel.detail"></p>
         <div id="history-chart"></div>
         <p class="note" x-text="panel.note"></p>
       </aside>
