@@ -684,7 +684,7 @@ const QUIPS = {
     () => `Usually too hot. Maybe a linen overshirt.`,
   ],
   alwaysCold: [
-    () => `Historically too cold. Maybe bring a puffy jacket that's light in spirit?`,
+    () => `Historically too cold. Maybe bring a fur coat instead?`,
     (p) => `Don't be caught in a light jacket. It's too cold ${p.c}% of Aprils on record.`,
   ],
   usuallyCold: [
