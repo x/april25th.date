@@ -21,7 +21,7 @@ const LOCATE_K = 6; // zoom after geolocating (≈ continental scale)
 
 // palette — pen on a parchment notebook
 const COLOR_BG = "#f0efeb"; // parchment page
-const COLOR_OCEAN = "#bee1e6"; // light blue — open water
+const COLOR_OCEAN = "#f0efeb"; // ocean is just the page
 const COLOR_COLD = "#cddafd"; // periwinkle
 const COLOR_JACKET = "#e2ece9"; // azure mist — mild and just right
 const COLOR_HOT = "#fad2e1"; // petal frost — warm pink
@@ -692,7 +692,7 @@ document.addEventListener("alpine:init", () => {
       // gray placeholder until the first real texture lands
       texture = Uint8Array.from(landMask, (m) => (m ? 4 : 0));
 
-      worker = new Worker("./js/texture-worker.js");
+      worker = new Worker("./js/texture-worker.js?v=3");
       worker.postMessage({ type: "init", tw: TEX_W, th: TEX_H, landMask });
       worker.onmessage = (e) => {
         texCache.set(e.data.year, e.data.classes);

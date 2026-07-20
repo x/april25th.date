@@ -9,6 +9,7 @@ importScripts("d3.v7.min.js", "plot.min.js");
 const JACKET_MIN = 55;
 const JACKET_MAX = 70;
 const MAX_STATION_KM = 500;
+const CLASSIFY_OCEANS = false; // experiment: classify water too (false = ocean color)
 
 let TW = 0;
 let TH = 0;
@@ -46,7 +47,8 @@ onmessage = (e) => {
   const classes = new Uint8Array(TW * TH);
 
   if (lat.length < 3) {
-    for (let i = 0; i < classes.length; i++) classes[i] = landMask[i] ? 4 : 0;
+    for (let i = 0; i < classes.length; i++)
+      classes[i] = CLASSIFY_OCEANS || landMask[i] ? 4 : 0;
     postMessage({ year: m.year, classes }, [classes.buffer]);
     return;
   }
@@ -92,7 +94,7 @@ onmessage = (e) => {
   for (let y = 0, k = 0; y < TH; y++) {
     const cellLat = 90 - ((y + 0.5) / TH) * 180;
     for (let x = 0; x < TW; x++, k++) {
-      if (!landMask[k]) continue; // ocean stays 0
+      if (!CLASSIFY_OCEANS && !landMask[k]) continue; // ocean stays 0
       j = delaunay.find(x + 0.5, y + 0.5, j);
       const s = index[j];
       const cellLon = ((x + 0.5) / TW) * 360 - 180;
