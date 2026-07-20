@@ -23,7 +23,7 @@ const LOCATE_K = 6; // zoom after geolocating (≈ continental scale)
 const COLOR_BG = "#f0efeb"; // parchment page
 const COLOR_OCEAN = "#f0efeb"; // ocean is just the page
 const COLOR_COLD = "#cddafd"; // periwinkle
-const COLOR_JACKET = "#e2ece9"; // azure mist — mild and just right
+const COLOR_JACKET = "#bee1e6"; // light blue — open skies, pure calm
 const COLOR_HOT = "#fad2e1"; // petal frost — warm pink
 const COLOR_UNKNOWN = "#eae4e9"; // alabaster grey, hatched
 const COLOR_HATCH = "#cfc7bc"; // hatch stroke over unknown
@@ -32,7 +32,7 @@ const INK_BORDER = "rgba(63,58,51,0.55)";
 const INK_STATE = "rgba(63,58,51,0.32)";
 const INK_GRID = "rgba(63,58,51,0.10)";
 const TEXT_COLD = "#6b83c4"; // legible ink versions for tooltip text
-const TEXT_JACKET = "#5f8f7d";
+const TEXT_JACKET = "#4f8a96";
 const TEXT_HOT = "#c96f88";
 // ---------------------------------------------------------------------------
 
