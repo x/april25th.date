@@ -45,17 +45,29 @@ body > header {
 
 body > header hgroup {
   margin-bottom: 0;
+  max-width: 26rem;
+}
+
+body > header .eyebrow {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #877f73;
+  margin-bottom: 0.2rem;
 }
 
 body > header h1 {
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.15rem;
   font-family: Georgia, serif;
+  font-size: 1.9rem;
+  line-height: 1.15;
   color: #3f3a33;
 }
 
 body > header p {
   font-style: italic;
   color: #6d675e;
+  font-size: 0.95rem;
+  line-height: 1.35;
 }
 
 #tooltip {
@@ -151,14 +163,28 @@ body > header p {
 
 @media (max-width: 640px) {
   body > header {
-    padding: 0.75rem 1rem 0;
+    padding: 0.85rem 1rem 0;
+  }
+
+  body > header .eyebrow {
+    font-size: 0.75rem;
   }
 
   body > header h1 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
   }
 
   body > header p {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  #controls {
+    bottom: 0.75rem;
+  }
+
+  #legend {
+    gap: 0.7rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.3rem;
   }
 }
