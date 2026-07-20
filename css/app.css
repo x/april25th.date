@@ -39,20 +39,20 @@ body > header {
   left: 0;
   right: 0;
   z-index: 5;
-  padding: 1.1rem 1.5rem 0;
+  padding: 0.7rem 1.5rem 0;
+  text-align: center;
   pointer-events: none;
 }
 
 body > header hgroup {
-  margin-bottom: 0;
-  max-width: 26rem;
-}
-
-body > header .eyebrow {
-  font-style: italic;
-  font-size: 0.85rem;
-  color: #877f73;
-  margin-bottom: 0.2rem;
+  margin: 0 auto;
+  max-width: 30rem;
+  /* parchment halo so the words sit legibly on the map */
+  text-shadow:
+    0 0 3px #f0efeb,
+    0 0 6px #f0efeb,
+    0 0 12px #f0efeb,
+    0 0 20px #f0efeb;
 }
 
 body > header h1 {
@@ -163,11 +163,7 @@ body > header p {
 
 @media (max-width: 640px) {
   body > header {
-    padding: 0.85rem 1rem 0;
-  }
-
-  body > header .eyebrow {
-    font-size: 0.75rem;
+    padding: 0.6rem 1rem 0;
   }
 
   body > header h1 {
