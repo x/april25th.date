@@ -608,6 +608,182 @@ function tooltipHtml(lat, lon, rows) {
     <span class="muted">${cell} · nearest: ${near[0].name} (${Math.round(d0)} km)</span>`;
 }
 
+// --- click history ---------------------------------------------------------
+
+let hist = null;
+let histPromise = null;
+
+// data/history.bin: per-station lat/lon + int8 temps for 1930-2025
+function ensureHistory() {
+  if (!histPromise) {
+    histPromise = fetch("./data/history.bin")
+      .then((r) => r.arrayBuffer())
+      .then((buf) => {
+        const dv = new DataView(buf);
+        const n = dv.getUint32(0, true);
+        const y0 = dv.getUint16(4, true);
+        const ny = dv.getUint16(6, true);
+        const lats = new Float32Array(n);
+        const lons = new Float32Array(n);
+        const temps = new Int8Array(n * ny);
+        const stride = 8 + ny;
+        for (let i = 0; i < n; i++) {
+          const off = 8 + i * stride;
+          lats[i] = dv.getFloat32(off, true);
+          lons[i] = dv.getFloat32(off + 4, true);
+          temps.set(new Int8Array(buf, off + 8, ny), i * ny);
+        }
+        hist = { n, y0, ny, lats, lons, temps };
+        return hist;
+      });
+  }
+  return histPromise;
+}
+
+// yearly IDW estimate at a cell from the k nearest reporting stations
+function historySeries(lat, lon) {
+  const n = hist.n;
+  const d = new Float32Array(n);
+  for (let i = 0; i < n; i++)
+    d[i] = haversineKm(lat, lon, hist.lats[i], hist.lons[i]);
+  const idx = Array.from({ length: n }, (_, i) => i)
+    .sort((a, b) => d[a] - d[b])
+    .slice(0, 40);
+  const out = [];
+  for (let y = 0; y < hist.ny; y++) {
+    let wsum = 0;
+    let tsum = 0;
+    let used = 0;
+    for (const i of idx) {
+      if (d[i] > MAX_STATION_KM) break; // idx is sorted by distance
+      const v = hist.temps[i * hist.ny + y];
+      if (v === -128) continue;
+      const w = 1 / Math.max(d[i], 1) ** 2;
+      wsum += w;
+      tsum += w * v;
+      if (++used >= K_NEIGHBORS) break;
+    }
+    if (used > 0) out.push({ year: hist.y0 + y, temp: tsum / wsum });
+  }
+  return out;
+}
+
+const QUIPS = {
+  perfect: [
+    (p) => `Historically, this is exactly what Miss Rhode Island had in mind: ${p.j}% of Aprils here called for just a light jacket.`,
+    (p) => `The perfect date, practically guaranteed — light-jacket weather ${p.j}% of the time.`,
+    (p) => `This spot has April 25th down to a science. Bring the light jacket, need nothing else.`,
+  ],
+  usuallyJacket: [
+    (p) => `Most years, all you need here is a light jacket (${p.j}% of Aprils on record).`,
+    (p) => `Usually just right. Pack the light jacket with confidence.`,
+  ],
+  alwaysHot: [
+    () => `Historically too hot. A light jacket here is a cry for help.`,
+    (p) => `Leave the jacket at home — it's been too hot ${p.h}% of Aprils.`,
+  ],
+  usuallyHot: [
+    (p) => `More often than not, too hot (${p.h}% of years). The jacket is decorative.`,
+    () => `Usually too hot. Linen over light jacket.`,
+  ],
+  alwaysCold: [
+    () => `Historically too cold. You'll want considerably more than a light jacket.`,
+    (p) => `A light jacket here is wishful thinking — too cold ${p.c}% of Aprils on record.`,
+  ],
+  usuallyCold: [
+    (p) => `Usually too cold (${p.c}% of years). The light jacket will need backup.`,
+    () => `Most Aprils, the light jacket alone won't cut it. Bring layers.`,
+  ],
+  mixed: [
+    (p) => `This place can't commit: ${p.c}% too cold, ${p.j}% just right, ${p.h}% too hot. Pack options.`,
+    () => `April 25th here is a coin flip. Layers are your friend.`,
+  ],
+  sparse: [
+    (p) => `Only ${p.n} Aprils on record near here — not enough to call it.`,
+  ],
+};
+
+function quipFor(series, lat, lon) {
+  const n = series.length;
+  if (n === 0) return "No weather stations close enough. Terra incognita.";
+  const c = series.filter((s) => s.temp < JACKET_MIN).length;
+  const h = series.filter((s) => s.temp > JACKET_MAX).length;
+  const j = n - c - h;
+  const p = {
+    n,
+    c: Math.round((100 * c) / n),
+    j: Math.round((100 * j) / n),
+    h: Math.round((100 * h) / n),
+  };
+  let pool;
+  if (n < 8) pool = QUIPS.sparse;
+  else if (j / n >= 0.85) pool = QUIPS.perfect;
+  else if (h / n >= 0.85) pool = QUIPS.alwaysHot;
+  else if (c / n >= 0.85) pool = QUIPS.alwaysCold;
+  else if (j / n >= 0.55) pool = QUIPS.usuallyJacket;
+  else if (h / n >= 0.55) pool = QUIPS.usuallyHot;
+  else if (c / n >= 0.55) pool = QUIPS.usuallyCold;
+  else pool = QUIPS.mixed;
+  const hash = Math.abs(
+    (Math.round(lat * 10) * 73856093) ^ (Math.round(lon * 10) * 19349663)
+  );
+  let text = pool[hash % pool.length](p);
+  // a wry climate note when the record has drifted
+  if (n >= 30) {
+    const half = Math.floor(n / 2);
+    const early = d3.mean(series.slice(0, half), (s) => s.temp);
+    const late = d3.mean(series.slice(-half), (s) => s.temp);
+    if (late - early >= 2.5) text += " It has been running warmer lately.";
+    else if (early - late >= 2.5) text += " It has been running colder lately.";
+  }
+  return text;
+}
+
+function renderHistoryChart(series) {
+  const el = document.getElementById("history-chart");
+  if (series.length === 0) {
+    el.replaceChildren();
+    return;
+  }
+  const temps = series.map((s) => s.temp);
+  const lo = Math.min(Math.min(...temps) - 4, JACKET_MIN - 6);
+  const hi = Math.max(Math.max(...temps) + 4, JACKET_MAX + 6);
+  const fig = Plot.plot({
+    width: Math.min(330, el.clientWidth || 330),
+    height: 170,
+    marginLeft: 32,
+    marginBottom: 22,
+    style: {
+      background: "transparent",
+      fontFamily: "Georgia, serif",
+      color: "#6d675e",
+      fontSize: "10px",
+    },
+    x: { domain: [1928, 2027], tickFormat: (d) => String(d), label: null },
+    y: { domain: [lo, hi], label: "°F", grid: false },
+    marks: [
+      Plot.rect([{ y1: lo, y2: JACKET_MIN }], {
+        x1: 1928, x2: 2027, y1: "y1", y2: "y2",
+        fill: COLOR_COLD, fillOpacity: 0.45,
+      }),
+      Plot.rect([{ y1: JACKET_MIN, y2: JACKET_MAX }], {
+        x1: 1928, x2: 2027, y1: "y1", y2: "y2",
+        fill: COLOR_JACKET, fillOpacity: 0.5,
+      }),
+      Plot.rect([{ y1: JACKET_MAX, y2: hi }], {
+        x1: 1928, x2: 2027, y1: "y1", y2: "y2",
+        fill: COLOR_HOT, fillOpacity: 0.45,
+      }),
+      Plot.line(series, {
+        x: "year", y: "temp",
+        stroke: INK, strokeWidth: 0.8, strokeOpacity: 0.7,
+      }),
+      Plot.dot(series, { x: "year", y: "temp", r: 1.2, fill: INK }),
+    ],
+  });
+  el.replaceChildren(fig);
+}
+
 // --- helpers ---------------------------------------------------------------
 
 function debounce(fn, ms) {
@@ -662,6 +838,7 @@ document.addEventListener("alpine:init", () => {
     stationCount: 0,
     loading: true,
     tooltip: { show: false, x: 0, y: 0, html: "" },
+    panel: { show: false, title: "", summary: "", note: "" },
 
     async init() {
       const [topo, mf, admin1, states, cities] = await Promise.all([
@@ -770,13 +947,19 @@ document.addEventListener("alpine:init", () => {
     setupGestures() {
       const pointers = new Map();
       let pinchDist = 0;
+      let press = null; // for click-vs-drag detection
       canvas.style.touchAction = "none";
       canvas.style.cursor = "grab";
 
       canvas.addEventListener("pointerdown", (e) => {
-        canvas.setPointerCapture(e.pointerId);
+        try {
+          canvas.setPointerCapture(e.pointerId);
+        } catch (err) {} // synthetic pointers can't always be captured
         pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-        if (pointers.size === 2) {
+        if (pointers.size === 1) {
+          press = { x: e.clientX, y: e.clientY, moved: false, multi: false };
+        } else {
+          if (press) press.multi = true;
           const [p1, p2] = [...pointers.values()];
           pinchDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
         }
@@ -791,6 +974,8 @@ document.addEventListener("alpine:init", () => {
         const dy = e.clientY - p.y;
         p.x = e.clientX;
         p.y = e.clientY;
+        if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 6)
+          press.moved = true;
         if (pointers.size === 1) {
           this.pan(dx, dy);
         } else if (pointers.size === 2) {
@@ -804,12 +989,22 @@ document.addEventListener("alpine:init", () => {
         }
       });
 
-      const release = (e) => {
+      canvas.addEventListener("pointerup", (e) => {
         pointers.delete(e.pointerId);
-        if (pointers.size === 0) canvas.style.cursor = "grab";
-      };
-      canvas.addEventListener("pointerup", release);
-      canvas.addEventListener("pointercancel", release);
+        if (pointers.size === 0) {
+          canvas.style.cursor = "grab";
+          if (press && !press.moved && !press.multi)
+            this.openCell(e.clientX, e.clientY);
+          press = null;
+        }
+      });
+      canvas.addEventListener("pointercancel", (e) => {
+        pointers.delete(e.pointerId);
+        if (pointers.size === 0) {
+          canvas.style.cursor = "grab";
+          press = null;
+        }
+      });
 
       canvas.addEventListener(
         "wheel",
@@ -883,6 +1078,30 @@ document.addEventListener("alpine:init", () => {
         () => {}, // denied or unavailable: stay on the globe
         { timeout: 8000, maximumAge: 3600000 }
       );
+    },
+
+    // click a cell → its April 25th history
+    async openCell(clientX, clientY) {
+      const ll = invertClient(clientX, clientY);
+      if (!ll) return;
+      const lon = Math.round(ll[0] * 10) / 10;
+      const lat = Math.round(ll[1] * 10) / 10;
+      let title = `${Math.abs(lat).toFixed(1)}°${lat >= 0 ? "N" : "S"}, ${Math.abs(lon).toFixed(1)}°${lon >= 0 ? "E" : "W"}`;
+      const near = kNearest(currentRows, lat, lon, 1)[0];
+      if (near && near.dist < 150) title += ` · near ${near.name}`;
+      this.tooltip.show = false;
+      this.panel.show = true;
+      this.panel.title = title;
+      this.panel.summary = "Reading the archives…";
+      this.panel.note = "";
+      document.getElementById("history-chart").replaceChildren();
+      await ensureHistory();
+      const series = historySeries(lat, lon);
+      this.panel.summary = quipFor(series, lat, lon);
+      this.panel.note = series.length
+        ? `April 25th mean temp, ${series.length} of ${hist.ny} years · interpolated from the ${K_NEIGHBORS} nearest stations`
+        : "";
+      renderHistoryChart(series);
     },
 
     setupHover() {
