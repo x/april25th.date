@@ -173,8 +173,28 @@ body > header a:hover {
 }
 
 #controls input[type="range"],
-#controls output {
+#controls output,
+#controls a {
   pointer-events: auto;
+}
+
+#colophon {
+  margin: 0.15rem 0 0;
+  font-size: 0.68rem;
+  font-style: italic;
+  color: #a29a8d;
+}
+
+#colophon a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #c4bcae;
+  text-underline-offset: 2px;
+}
+
+#colophon a:hover {
+  color: #6d675e;
 }
 
 #controls input[type="range"] {
